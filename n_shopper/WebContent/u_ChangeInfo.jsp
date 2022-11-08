@@ -27,11 +27,10 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 	<jsp:include page="/header.jsp" />
 	<div class="container">
 		<div
-			class="d-flex flex-column justify-content-center align-items-center">
+			class="d-flex flex-column justify-content-center align-items-center mx-auto" style="width:100%;max-width:720px;" >
 			<br>
 			<h2>会員情報変更</h2>
-			<br>
-			<form action="/shopper/U_ChangeInfo" method="post">
+			<form action="/shopper/U_ChangeInfo" method="post" class="container my-4">
 				<!--
 		<li>メールアドレス<input type="text" name="mail"
 			placeholder="</%=user.getMail()%>" /></li>
@@ -39,7 +38,8 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 				placeholder="</%=user.getBirthday()%>" /> <label
 					for="exampleInputEmail1" class="form-label">エリア選択</label>
 		 -->
-				<div class="mb-1">
+				<h3 class="my-2">基本情報変更</h3>
+				<div class="form-outline mb-1">
 					<label for="email" class="form-label">メールアドレス</label> <input
 						type="email" class="form-control" id="email" name="email"
 						value="<%=user.getMail()%>" placeholder="メールアドレスを入力してください" required="required">
@@ -50,8 +50,8 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 						type="text" id="name" class="form-control" name="name"
 						value="<%=user.getName()%>" placeholder="ニックネームを入力してくださいください" required="required"/>
 				</div>
-				<div class="row">
-					<div class="form-outline col">
+				<div class="row mb-1">
+					<div class="form-outline col-lg">
 						<label class="form-label" for="flexRadioDefault">性別</label>
 						<div>
 							<div class="form-check form-check-inline">
@@ -91,7 +91,7 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 			</li>
 										 -->
 					</div><!-- 依頼：生年月日が引き継げたら助かります。 -->
-					<div class="form-outline col">
+					<div class="form-outline col-lg">
 						<label for="exampleInputEmail1" class="form-label">生年月日</label>
 						<div class="row">
 							<div class="col">
@@ -114,6 +114,7 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 						</div>
 					</div>
 				</div>
+				<label for="areas" class="form-label">エリア選択</label>
 				<div class="row">
 					<div class="col">
 						<select id="region" class="form-select"
@@ -173,24 +174,32 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 						</select>
 					</div>
 				</div>
-				<button type="submit" class="btn btn-primary">変更する</button>
+				<br>
+				<div class="row justify-content-center">
+					<button type="submit" class="btn btn-primary col-3">変更する</button>
+				</div>
 			</form>
 
 
-			<form action="/shopper/infoPass.jsp">
-				<h3>パスワード変更</h3>
+			<form action="/shopper/infoPass.jsp" class="container my-2">
+				<h3 class="my-2">パスワード変更</h3>
 				<input type="hidden" name="pass" value="<%=user.getPass()%>">
 				<!-- 現在のパスワードをinfoPass.jspに送る -->
 				<input type="hidden" name="id" value="<%=user.getUser_id()%>">
 				<!-- 現在のパスワードをinfoPass.jspに送る -->
-				<button type="submit" class="btn btn-primary">変更する</button>
+				<div class="row justify-content-center">
+					<button type="submit" class="btn btn-primary col-3">変更する</button>
+				</div>
 			</form>
 
 
-			<form action="/shopper/U_Quit" method="post">
-				<h3>退会確認</h3>
+			<form action="/shopper/U_Quit" method="post" class="container my-2">
+				<h3 class="my-2">退会</h3>
+				<br>
 				<input type="hidden" name="active" value="1">
-				<button type="submit" class="btn btn-primary">退会する</button>
+				<div class="row justify-content-center">
+					<button type="submit" class="btn btn-primary col-3">退会する</button>
+				</div>
 			</form>
 		</div>
 	</div>

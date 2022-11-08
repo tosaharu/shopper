@@ -18,6 +18,36 @@ public class UserDAO {
 	public static final String NAME = "root";
 	public static final String PASS = "root";
 
+	//メールアドレスが存在するかチェック
+	public boolean CheckMail(String mail) {
+
+		//データベースに接続してみる。
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");//ドライバのロード
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		try (Connection conn = DriverManager.getConnection(URL, NAME, PASS)) {
+			PreparedStatement ps = conn.prepareStatement("SELECT * from user where mail = ?");
+			ps.setString(1, mail);
+			//select実行格納
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				return true;
+
+			}
+			return false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+			// TODO: handle exception
+			return false;
+		}
+		return false;
+	}
+
 	//	CheckUserログインできるか
 	public U_User CheckUser(U_User user) {
 

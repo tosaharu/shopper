@@ -45,7 +45,8 @@ List<U_Product> areaLowestPriceProductList = (List<U_Product>) session.getAttrib
 							value="商品登録">商品登録</button>
 					<button type="button" class="btn btn-light col-3 mx-2"
 							value="商品検索">検索する</button>
-					<button type="button" class="btn btn-light col-3 mx-2" onclick="loction.href='/shopper/CouponListS'" value="クーポン一覧">クーポン一覧</button>
+					<button type="button" class="btn btn-light col-3 mx-2"
+					onclick="location.href='/shopper/CouponListS'">クーポン</button>
 				</div>
 			</form>
 			<br>
@@ -347,7 +348,6 @@ List<U_Product> areaLowestPriceProductList = (List<U_Product>) session.getAttrib
 			</div>
 		</div>
 	</div>
-	<a type="button" class="btn btn-light col-3 mx-2" href="/CouponListS" >クーポン一覧</a>
 
 	<jsp:include page="/common_js.jsp" />
 </body>

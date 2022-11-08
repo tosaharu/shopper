@@ -25,32 +25,37 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 	<jsp:include page="/header.jsp" />
 
 	<div class="container">
-		<div class="d-flex justify-content-center align-items-center">
+		<div
+			class="d-flex flex-column justify-content-center align-items-center mx-auto" style="width:100%;max-width:720px;" >
 			<div class="">
-				<br> <br>
+				<br>
 				<h2>新規会員登録</h2>
 				<br>
 				<form action="/shopper/U_RegisterUser" method="post">
-					<div class="form-outline mb-1">
+					<div class="form-outline mb-1" id="email_outline">
 						<label for="email"  class="form-label">メールアドレス</label>
 						<input type="email"  class="form-control" id="email" name="email" required="required">
+				    	<div id="validationServerUsernameFeedback" class="invalid-feedback">有効なメールアドレスを入力してください</div>
 						<span class="label label-danger">${errorMessage}</span>
 					</div>
-					<div class="form-outline mb-1">
+					<div class="form-outline mb-1" id="pass_outline">
 						<label class="form-label" for="password1">パスワード</label>
 						<input	type="password" id="password1" class="form-control" required="required"/>
+				    	<div id="validationServerUsernameFeedback" class="invalid-feedback">パスワードを入力してください</div>
 					</div>
 
-					<div class="form-outline mb-1">
+					<div class="form-outline mb-1" id="pass2_outline">
 						<label class="form-label" for="password2">パスワード（再入力）</label>
 						<input 	type="password" id="password2" class="form-control"  name="password" required="required"/>
+				    	<div id="validationServerUsernameFeedback" class="invalid-feedback">パスワードが一致しません</div>
 					</div>
-					<div class="form-outline mb-1">
+					<div class="form-outline mb-1" id="name_outline">
 						<label class="form-label" for="name">ニックネーム</label>
 						<input	type="text" id="name" class="form-control" name="name" required="required"/>
+				    	<div id="validationServerUsernameFeedback" class="invalid-feedback">ユーザー名を入力してください</div>
 					</div>
 					<div class="row mb-1">
-						<div class="form-outline col-lg">
+						<div class="form-outline col-lg-5">
 							<label class="form-label" for="flexRadioDefault">性別</label>
 							<div>
 								<div class="form-check form-check-inline">
@@ -67,24 +72,28 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 								</div>
 							</div>
 						</div>
-						<div class="form-outline col-lg"> <!-- 依頼：生年月日をnot valueで表示できますか？（required="required"できたら助かります。） -->
+						<div class="form-outline col-lg-7" id="year-select_outline"> <!-- 依頼：生年月日をnot valueで表示できますか？（required="required"できたら助かります。） -->
 							<label for="exampleInputEmail1" class="form-label">生年月日</label>
 							<div class="row">
 								<div class="col">
 									<select id="year-select" class="form-select"
-										aria-label="Default select example" name="year" required="required">
+										aria-label="Default select example" name="year" required="required"
+										onchange="CheckSelectedMonth()">
 									</select>
+							    	<div id="validationServerUsernameFeedback" class="invalid-feedback">年を入力してください</div>
 								</div>
-								<div class="col">
+								<div class="col" id="month-select_outline">
 									<select id="month-select" class="form-select"
 										aria-label="Default select example" name="month" required="required"
-										onchange="CheckSelectedMonth(this)">
+										onchange="CheckSelectedMonth()">
 									</select>
+							    	<div id="validationServerUsernameFeedback" class="invalid-feedback">月を入力してください</div>
 								</div>
-								<div class="col">
+								<div class="col" id="day-select_outline">
 									<select id="day-select" class="form-select"
 										aria-label="Default select example" name="day" required="required">
 									</select>
+							    	<div id="validationServerUsernameFeedback" class="invalid-feedback">日を入力してください</div>
 								</div>
 
 							</div>
@@ -92,7 +101,7 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 					</div>
 					<label for="exampleInputEmail1" class="form-label">エリア選択</label>
 					<div class="row">
-						<div class="col">
+						<div class="col" id="region_outline">
 							<select id="region"  class="form-select" aria-label="Default select example"
 								onchange="CheckSelectedRegion(this)" required="required">
 								<option value="" selected="selected">地方を選択してください</option>
@@ -105,7 +114,7 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 								%>
 							</select>
 						</div>
-						<div class="col">
+						<div class="col" id="prefecture_outline">
 							<select id="prefecture" class="form-select" aria-label="Default select example"
 								disabled="disabled" onchange="CheckSelectedPrefecture(this)" required="required">
 								<option value="" selected="selected">都道府県を選択してください</option>
@@ -119,7 +128,7 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 								%>
 							</select>
 						</div>
-						<div class="col">
+						<div class="col" id="area_outline">
 							<select id="area" class="form-select" aria-label="Default select example" name="area"
 								disabled="disabled" required="required">
 								<option value="" selected="selected">エリアを選択してください</option>
@@ -143,7 +152,7 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 						<button type="button" class="btn btn-secondary col-3 mx-2"
 							onclick="location.href='{% url 'index'%}'">戻る</button>
 						<button type="button" id="subm" class="btn btn-primary col-3 mx-2"
-							data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="sendFormData()">
+							data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="sendFormData()" disabled>
 							登録</button>
 					</div>
 					<!-- Modal -->
@@ -202,6 +211,7 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 	</div>
 	<jsp:include page="/common_js.jsp" />
 	<script type="text/javascript" src="js/additional.js"></script>
+	<script type="text/javascript" src="js/validation.js"></script>
 </body>
 
 </html>
