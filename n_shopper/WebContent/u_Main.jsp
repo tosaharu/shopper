@@ -1,14 +1,24 @@
+<%@page import="java.util.ArrayList"%>
 <%@page import="model.U_User"%>
 <%@page import="model.U_Product"%>
 <%@page import="java.util.List"%>
 <%@page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<!--
+★★★旧仕様★★★
+ユーザーの最安値だけを取得するリスト
+List<U_Product> myCategorizedProductList = (List<U_Product>) session.getAttribute("myCategorisedProductList");
+エリアの最安値だけを取得するリスト
+List<U_Product> areaLowestPriceProductList = (List<U_Product>) session.getAttribute("areaLowestPriceProductList");
+
+ -->
 <%
 U_User user = (U_User) session.getAttribute("loginUser");
-List<U_Product> myCategorizedProductList = (List<U_Product>) session.getAttribute("myCategorisedProductList");
-List<U_Product> areaLowestPriceProductList = (List<U_Product>) session.getAttribute("areaLowestPriceProductList");
+ArrayList<ArrayList<U_Product>> myCategorisedProductLists = (ArrayList<ArrayList<U_Product>>) session
+		.getAttribute("myCategorisedProductLists");
+ArrayList<ArrayList<U_Product>> areaLowestPriceProductLists = (ArrayList<ArrayList<U_Product>>) session
+		.getAttribute("areaLowestPriceProductLists");
 List<U_Product> productList = (List<U_Product>) session.getAttribute("productList");
-
 %>
 <!-- ①自分の購入物を品目で絞り込んだリスト
 List<U_Product> myCategorizedProductList = (List<U_Product>) session.getAttribute("myCategorizedProductList");
@@ -29,6 +39,8 @@ List<U_Product> areaLowestPriceProductList = (List<U_Product>) session.getAttrib
 <meta http-equiv="x-ua-compatible" content="ie=edge" />
 <title>ログイン</title>
 <jsp:include page="/common_css.jsp" />
+<!-- メイン画面用CSS -->
+<link rel="stylesheet" href="css/u_main.css" />
 </head>
 <body>
 	<jsp:include page="/header.jsp" />
@@ -42,11 +54,10 @@ List<U_Product> areaLowestPriceProductList = (List<U_Product>) session.getAttrib
 			<form action="U_RegisterItem" method="get">
 				<div class="row justify-content-start">
 					<button type="submit" class="btn btn-primary col-3 mx-2"
-							value="商品登録">商品登録</button>
+						value="商品登録">商品登録</button>
+					<button type="button" class="btn btn-light col-3 mx-2" value="商品検索">検索する</button>
 					<button type="button" class="btn btn-light col-3 mx-2"
-							value="商品検索">検索する</button>
-					<button type="button" class="btn btn-light col-3 mx-2"
-					onclick="location.href='/shopper/CouponListS'">クーポン</button>
+						onclick="location.href='/shopper/CouponListS'">クーポン</button>
 				</div>
 			</form>
 			<br>
@@ -67,63 +78,97 @@ List<U_Product> areaLowestPriceProductList = (List<U_Product>) session.getAttrib
 			<div class="tab-content" id="nav-tabContent">
 				<div class="tab-pane fade show active overflow-auto my-5"
 					id="mylist" role="tabpanel" aria-labelledby="mylist-tab">
-						<% for(U_Product myCategorizedProduct : myCategorizedProductList){ %>
-						<div class="card mb-1">
-						  	<div class="card-body">
-						    	<h5 class="card-title"><%= myCategorizedProduct.getItem_name()%></h5>
-						    	<p class="card-text">自分</p>
-						    	<div class="row g-3 mb-3">
-									<div class="col col-lg-4">
-								        <div class="card-text p-2 rounded-pill border bg-light text-center"><%= "価格："+myCategorizedProduct.getPrice()%></div>
-									</div>
-									<div class="col col-lg-4">
-								        <div class="card-text p-2 rounded-pill border bg-light text-center">
-							        		<a href="/shopper/U_StoreInfo?id=<%=myCategorizedProduct.getStore_id() %>">
-								        		<%= "店舗："+ myCategorizedProduct.getStore_name()%>
-								        	</a>
-								        </div>
-									</div>
-									<div class="col col-lg-4">
-								        <div class="card-text p-2 rounded-pill border bg-light text-center"><%= "日付："+ myCategorizedProduct.getDate()%></div>
-									</div>
+					<%
+					if (myCategorisedProductLists != null && myCategorisedProductLists.size() != 0) {
+					%>
+					<ul>
+						<%
+						for (ArrayList<U_Product> myCategorizedProductList : myCategorisedProductLists) {
+						%>
+						<li class="card mb-1">
+							<div class="card-body">
+								<h5 class="card-title"><%=myCategorizedProductList.get(0).getItem_name()%></h5>
+								<div class="row mb-1">
+									<div class="list-header col col-lg-2">価格</div>
+									<div class="list-header col col-lg-3">商品詳細</div>
+									<div class="list-header col col-lg-2">ユーザー</div>
+									<div class="list-header col col-lg-3">店舗</div>
+									<div class="list-header col col-lg-2">日付</div>
 								</div>
-						    	<p class="card-text">他ユーザー</p>
-								<p class="card-text">
-									<% int matchcnt =0; %>
-									<% for(U_Product areaLowestPriceProduct : areaLowestPriceProductList){ %>
-										<% if(myCategorizedProduct.getItem_id() == areaLowestPriceProduct.getItem_id()){ %>
-											<% matchcnt++; %>
-											<% if(areaLowestPriceProduct.getUser_id() == user.getUser_id()){ %>
-											あなたがエリア最安値購入者です！
-											<% }else{ %>
-											<div class="row g-3 mb-3">
-												<div class="col col-lg-4">
-											        <div class="card-text p-2 rounded-pill border bg-light text-center"><%="価格：" + areaLowestPriceProduct.getPrice()%></div>
-												</div>
-												<div class="col col-lg-4">
-											        <div class="card-text p-2 rounded-pill border bg-light text-center">
-		       							        		<a href="/shopper/U_StoreInfo?id=<%=areaLowestPriceProduct.getStore_id() %>">
-		       							        			<%="店舗：" + areaLowestPriceProduct.getStore_name()%></div>
-		       							        		</a>
-												</div>
-												<div class="col col-lg-4">
-											        <div class="card-text p-2 rounded-pill border bg-light text-center"><%="日付：" + areaLowestPriceProduct.getDate()%></div>
-												</div>
-												<div class="col col-lg-4">
-											        <div class="card-text p-2 rounded-pill border bg-light text-center"><%="購入者：" + areaLowestPriceProduct.getUser_name()%></div>
-												</div>
+								<%
+								for (U_Product myCategorizedProduct : myCategorizedProductList) {
+								%>
+									<div class="self row mb-1">
+										<div class="col col-lg-2">
+											<div class="price card-text p-2"><%=myCategorizedProduct.getPrice() + "円"%></div>
+										</div>
+										<div class="col col-lg-3">
+											<div class="card-text p-2"><%=myCategorizedProduct.getItemDetail()%></div>
+										</div>
+										<div class="col col-lg-2">
+											<div class="card-text p-2">あなた</div>
+										</div>
+										<div class="col col-lg-3">
+											<div class="card-text p-2">
+												<a
+													href="/shopper/U_StoreInfo?id=<%=myCategorizedProduct.getStore_id()%>">
+													<%=myCategorizedProduct.getStore_name()%>
+												</a>
 											</div>
-											<%} %>
-										<%} %>
-									<%} %>
-									<% if(matchcnt == 0){ %>
+										</div>
+										<div class="col col-lg-2">
+											<div class="card-text p-2"><%=myCategorizedProduct.getDate()%></div>
+										</div>
+									</div>
+								<% }%>
+								<% if (areaLowestPriceProductLists != null && areaLowestPriceProductLists.size() != 0) {%>
+									<% int matchcnt = 0; %>
+									<% for (ArrayList<U_Product> areaLowestPriceProductList : areaLowestPriceProductLists) {%>
+										<% if (myCategorizedProductList.get(0).getItem_id() == areaLowestPriceProductList.get(0).getItem_id()) {%>
+											<% matchcnt++; %>
+											<% for (U_Product areaLowestPriceProduct : areaLowestPriceProductList) {%>
+												<div class="row mb-1">
+													<div class="col col-lg-2">
+														<div class="price card-text p-2"><%=areaLowestPriceProduct.getPrice() + "円"%></div>
+													</div>
+													<div class="col col-lg-3">
+														<div class="card-text p-2"><%=areaLowestPriceProduct.getItemDetail()%></div>
+													</div>
+													<div class="col col-lg-2">
+														<div class="card-text p-2"><%=areaLowestPriceProduct.getUser_name()%></div>
+													</div>
+													<div class="col col-lg-3">
+														<div class="card-text p-2">
+															<a
+																href="/shopper/U_StoreInfo?id=<%=areaLowestPriceProduct.getStore_id()%>">
+																<%=areaLowestPriceProduct.getStore_name()%>
+															</a>
+														</div>
+													</div>
+													<div class="col col-lg-2">
+														<div class="card-text p-2"><%=areaLowestPriceProduct.getDate()%></div>
+													</div>
+												</div>
+											<% }%>
+										<% }%>
+									<% }%>
+									<% if (matchcnt == 0) {%>
 									選択中のエリアに商品情報がありません
-									<%} %>
-								</p>
+									<% }%>
+								<% }else{ %>
+								選択中のエリアに商品情報がありません
+								<% }	%>
 
 							</div>
-						</div>
-						<%} %>
+						</li>
+						<% }%>
+					</ul>
+					<% }else{%>
+					<div class="my-5">
+						<p>まだ商品の投稿がありません</p>
+						<p>購入した商品の情報を登録しましょう</p>
+					</div>
+					<% }%>
 
 					<!--検討中、最低限品目ごとにリストを表示。可能であれば品目ごとの最安値を表示しつつ、最安意外を折りたたんで下に表示-->
 				</div>
@@ -168,7 +213,6 @@ List<U_Product> areaLowestPriceProductList = (List<U_Product>) session.getAttrib
 							</tr>
 							<%
 							}
-
 							%>
 						</tbody>
 						<%

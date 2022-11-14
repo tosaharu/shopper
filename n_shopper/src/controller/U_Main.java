@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -33,8 +34,12 @@ public class U_Main extends HttpServlet {
 		GetList.AreaPrefectureRegion(request);
 
 		//		商品リストの型を用意
-		List<U_Product> myCategorisedProductList;
-		List<U_Product> areaLowestPriceProductList;
+
+//		List<U_Product> myCategorisedProductList;
+//		List<U_Product> areaLowestPriceProductList;
+
+		ArrayList<ArrayList<U_Product>> myCategorisedProductLists;
+		ArrayList<ArrayList<U_Product>> areaLowestPriceProductLists;
 		List<U_Product> productList;
 
 		//		ログイン済みかどうかを判定
@@ -45,21 +50,35 @@ public class U_Main extends HttpServlet {
 		if (user != null) {
 			System.out.println("ユーザーIDは" + user.getUser_id());
 
-			//自分の品目別最安値投稿を取得
-			ProductDAO myCategorisedProductDAO = new ProductDAO();
-			myCategorisedProductList = myCategorisedProductDAO.selectMyCategorizedProductList(user.getUser_id());
+//			//★★★旧仕様★★★
+//
+//			//自分の品目別最安値投稿を取得
+//			ProductDAO myCategorisedProductDAO = new ProductDAO();
+//			myCategorisedProductList = myCategorisedProductDAO.selectMyCategorizedProductList(user.getUser_id());
+//			session.setAttribute("myCategorisedProductList", myCategorisedProductList);
 
-			//自分のエリアの、自分の投稿している品目の最安値情報を取得
+			//自分の品目別最安5投稿を取得
+			ProductDAO myCategorisedProductDAO = new ProductDAO();
+			myCategorisedProductLists = myCategorisedProductDAO.selectMyCategorizedProductLists(user.getUser_id());
+			session.setAttribute("myCategorisedProductLists", myCategorisedProductLists);
+
+//			//★★★旧仕様★★★
+//
+//			//選択中エリアの、各品目の最安値情報を取得
+//			ProductDAO areaLowestPriceProductDAO = new ProductDAO();
+//			areaLowestPriceProductList = areaLowestPriceProductDAO.selectAreaLowestPriceProductList(user.getArea_id());
+//			session.setAttribute("areaLowestPriceProductList", areaLowestPriceProductList);
+
+			//選択中エリアの、各品目の最安5投稿を取得
 			ProductDAO areaLowestPriceProductDAO = new ProductDAO();
-			areaLowestPriceProductList = areaLowestPriceProductDAO.selectAreaLowestPriceProductList(user.getArea_id());
+			areaLowestPriceProductLists = areaLowestPriceProductDAO.selectAreaLowestPriceProductLists(user.getArea_id());
+			session.setAttribute("areaLowestPriceProductLists", areaLowestPriceProductLists);
 
 			//自分の投稿履歴を取得
 			ProductDAO productDAO = new ProductDAO();
 			productList = productDAO.selectProductMainSubItemByUser(user.getUser_id());
-
-			session.setAttribute("myCategorisedProductList", myCategorisedProductList);
-			session.setAttribute("areaLowestPriceProductList", areaLowestPriceProductList);
 			session.setAttribute("productList", productList);
+
 
 		} else {
 			//			未ログインの場合

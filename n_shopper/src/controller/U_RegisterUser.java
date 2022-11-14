@@ -11,9 +11,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import dao.UserDAO;
 import model.GetList;
+import model.U_LoginLogic;
 import model.U_User;
 
 /***
@@ -22,7 +24,6 @@ import model.U_User;
 @WebServlet("/U_RegisterUser")
 public class U_RegisterUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -75,23 +76,34 @@ public class U_RegisterUser extends HttpServlet {
 			dispatcher.forward(request, response);
 		}else {
 
-		U_User user = new U_User(mail, pass, name, gender, birthday, area_id);
+			U_User user = new U_User(mail, pass, name, gender, birthday, area_id);
+			UserDAO userDAO = new UserDAO();
+			userDAO.userInsert(user);
 
+			// ログイン処理
+			U_LoginLogic loginLogic = new U_LoginLogic();
+			U_User isLogin = loginLogic.execute(user);
+			System.out.println(isLogin);
 
-		UserDAO userDAO = new UserDAO();
-		userDAO.userInsert(user);
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/u_Login.jsp");
-		dispatcher.forward(request, response);
-//		System.out.println(userDAO.userInsert(user)); 
-//		boolean judge=userDAO.userInsert(user);
-//		if(judge == true) {
-//		RequestDispatcher dispatcher = request.getRequestDispatcher("/u_Login.jsp");
-//		dispatcher.forward(request, response);
-//		}else {
-//		request.setAttribute("errorMessage", "そのメールアドレスは既に使用されています");
-//		RequestDispatcher dispatcher = request.getRequestDispatcher("/u_RegisterForm.jsp");
-//		dispatcher.forward(request, response);
-//		}
+			// ログイン成功時の処理(-1のときは失敗）
+			if (isLogin != null) {
+
+				// ユーザー情報をセッションスコープに保存
+				HttpSession session = request.getSession();
+				session.setAttribute("loginUser", user);
+
+				// メイン画面（サーブレット）にフォワード
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/U_Main");
+				dispatcher.forward(request, response);
+
+			} else {
+				// エラーメッセージをリクエストスコープに保存
+				request.setAttribute("errorMessage", "ログインできません");
+
+				//再度ログイン画面に遷移
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/u_Login.jsp");
+				dispatcher.forward(request, response);
+			}
+		}
 	}
-}
 }

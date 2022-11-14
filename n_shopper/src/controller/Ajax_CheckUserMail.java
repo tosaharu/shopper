@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dao.UserDAO;
+
 /**
  * Servlet implementation class Ajax_CheckUserMail
  */
@@ -28,7 +30,15 @@ public class Ajax_CheckUserMail extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+
+		String mail = request.getParameter("mail");
+		UserDAO userDAO = new UserDAO();
+		Boolean checkMail = userDAO.CheckMail(mail);
+		if(checkMail) {
+			response.getWriter().append("1");
+		}else {
+			response.getWriter().append("0");
+		}
 	}
 
 	/**
