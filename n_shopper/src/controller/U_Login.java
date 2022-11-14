@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import model.GetList;
 import model.U_LoginLogic;
 import model.U_User;
@@ -41,7 +43,9 @@ public class U_Login extends HttpServlet {
 		// リクエストパラメータの取得
 		request.setCharacterEncoding("UTF-8");
 		String mail = request.getParameter("mail");
-		String pass = request.getParameter("pass");
+		String originalPass = request.getParameter("pass");
+	    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	    String pass = encoder.encode(originalPass);
 
 		// U_Userインスタンス（ユーザー情報）の生成
 		U_User user = new U_User(mail, pass);

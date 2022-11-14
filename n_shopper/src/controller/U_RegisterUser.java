@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import dao.UserDAO;
 import model.GetList;
 import model.U_LoginLogic;
@@ -46,13 +48,14 @@ public class U_RegisterUser extends HttpServlet {
 
 		//リクエストパラメーター取得
 		String mail = request.getParameter("email");
-		String pass = request.getParameter("password");
+		String originalPass = request.getParameter("password");
+	    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	    String pass = encoder.encode(originalPass);
+	    System.out.println(pass);
 		String name = request.getParameter("name");
 		int gender = 0;
 		Date birthday = new Date();
 		int area_id = 0;
-
-
 
 		try {
 			gender = Integer.parseInt(request.getParameter("gender"));
