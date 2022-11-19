@@ -6,12 +6,12 @@
 	pageEncoding="UTF-8"%>
 <!--
 ★★★旧仕様★★★
-ユーザーの最安値だけを取得するリスト
+①ユーザーの最安値だけを取得するリスト
 List<U_Product> myCategorizedProductList = (List<U_Product>) session.getAttribute("myCategorisedProductList");
-エリアの最安値だけを取得するリスト
+②エリアの最安値だけを取得するリスト
 List<U_Product> areaLowestPriceProductList = (List<U_Product>) session.getAttribute("areaLowestPriceProductList");
-
  -->
+
 <%
 U_User user = (U_User) session.getAttribute("loginUser");
 ArrayList<ArrayList<U_Product>> myCategorisedProductLists = (ArrayList<ArrayList<U_Product>>) session
@@ -20,14 +20,6 @@ ArrayList<ArrayList<U_Product>> areaLowestPriceProductLists = (ArrayList<ArrayLi
 		.getAttribute("areaLowestPriceProductLists");
 List<U_Product> productList = (List<U_Product>) session.getAttribute("productList");
 %>
-<!-- ①自分の購入物を品目で絞り込んだリスト
-List<U_Product> myCategorizedProductList = (List<U_Product>) session.getAttribute("myCategorizedProductList");
--->
-
-<!-- ②選択中のエリアで品目毎の最安値を出したリスト
-List<U_Product> areaLowestPriceProductList = (List<U_Product>) session.getAttribute("areaLowestPriceProductList");
- -->
-
 
 <!DOCTYPE html>
 

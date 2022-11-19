@@ -1,7 +1,7 @@
 package model;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public class U_User implements Serializable {
 	private int user_id;
@@ -9,7 +9,7 @@ public class U_User implements Serializable {
 	private String pass;
 	private String name;
 	private int gender;
-	private Date birthday;
+	private LocalDateTime birthday;
 	private int region_id;
 	private String region_name;
 	private int prefecture_id;
@@ -19,98 +19,6 @@ public class U_User implements Serializable {
 	private int active;
 
 	public U_User() {}
-	public U_User(int user_id, String mail, String pass, String name, int gender, Date birthday, int region_id,
-			String region_name, int prefecture_id, String prefecture_name, int area_id, String area_name, int active) {
-		this.user_id = user_id;
-		this.mail = mail;
-		this.pass = pass;
-		this.name = name;
-		this.gender = gender;
-		this.birthday = birthday;
-		this.region_id = region_id;
-		this.region_name = region_name;
-		this.prefecture_id = prefecture_id;
-		this.prefecture_name = prefecture_name;
-		this.area_id = area_id;
-		this.area_name = area_name;
-		this.active = active;
-	}
-
-	public U_User(int user_id, String mail, String pass, String name, int gender, Date birthday, int area_id,
-			int active) {
-		this.user_id = user_id;
-		this.mail = mail;
-		this.pass = pass;
-		this.name = name;
-		this.gender = gender;
-		this.birthday = birthday;
-		this.area_id = area_id;
-		this.active = active;
-	}
-
-	public U_User(String mail, String pass, String name, int gender, Date birthday, int area_id) {
-		this.mail = mail;
-		this.pass = pass;
-		this.name = name;
-		this.gender = gender;
-		this.birthday = birthday;
-		this.area_id = area_id;
-	}
-	public U_User(String mail, String pass, String name, int gender, int area_id) {
-		this.mail = mail;
-		this.pass = pass;
-		this.name = name;
-		this.gender = gender;
-		this.birthday = birthday;
-		this.area_id = area_id;
-	}
-
-	public U_User(String mail, String pass) {
-		this.mail = mail;
-		this.pass = pass;
-
-	}
-	/**
-	 * 志摩
-	 * 会員登録変更メソッド
-	 * @param mail
-	 * @param pass
-	 * @param name
-	 * @param gender
-	 * @param area_id
-	 */
-	public U_User(String mail,String pass,String name, Date birthday,int gender,int area_id) {
-		this.mail = mail;
-		this.pass = pass;
-		this.name = name;
-		this.birthday = birthday;
-		this.gender = gender;
-		this.area_id = area_id;
-//		TODO 文字列でactiveにしたいなら""で囲むこと（BY佐藤）
-		this.active = active;
-	}
-
-	public U_User(String mail,Date birthday) {
-		this.mail = mail;
-		this.birthday = birthday;
-	}
-	/**
-	 * 志摩　退会処理
-	 * @param active
-	 */
-	public U_User(int active) {
-		this.active = active;
-	}
-
-	public U_User(int user_id, String name) {
-		super();
-		this.user_id = user_id;
-		this.name = name;
-	}
-	public U_User(String mail) {
-		super();
-		this.mail = mail;
-	}
 
 	public int getUser_id() {
 		return user_id;
@@ -142,10 +50,10 @@ public class U_User implements Serializable {
 	public void setGender(int gender) {
 		this.gender = gender;
 	}
-	public Date getBirthday() {
+	public LocalDateTime getBirthday() {
 		return birthday;
 	}
-	public void setBirthday(Date birthday) {
+	public void setBirthday(LocalDateTime birthday) {
 		this.birthday = birthday;
 	}
 	public int getRegion_id() {

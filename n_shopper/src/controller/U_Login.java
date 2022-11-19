@@ -1,5 +1,3 @@
-//＜ログイン処理　サーブレット＞
-
 package controller;
 
 import java.io.IOException;
@@ -14,66 +12,79 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import dao.UserDAO;
 import model.GetList;
-import model.U_LoginLogic;
 import model.U_User;
 
+/**
+ * ログイン画面関連のサーブレット
+ * @author Haruka Sato
+ */
 @WebServlet("/U_Login")
 public class U_Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * ログイン画面表示処理
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		//エリアデータを取得してリクエストスコープに入れる
+		// エリアデータを取得してリクエストスコープに保存
 		GetList.AreaPrefectureRegion(request);
 
-		//		フォームにフォワード
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/u_Login.jsp");
+		// ログイン画面jspにフォワード
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/u_Login.jsp");
 		dispatcher.forward(request, response);
 	}
 
+	/**
+	 * ログイン処理
+	 */
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
 
-		//エリアデータを取得してリクエストスコープに入れる
+		//エリアデータを取得してリクエストスコープに保存
 		GetList.AreaPrefectureRegion(request);
 
 		// リクエストパラメータの取得
 		request.setCharacterEncoding("UTF-8");
 		String mail = request.getParameter("mail");
 		String originalPass = request.getParameter("pass");
-	    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-	    String pass = encoder.encode(originalPass);
 
-		// U_Userインスタンス（ユーザー情報）の生成
-		U_User user = new U_User(mail, pass);
+		// 入力されたメールアドレスをもとにユーザーデータを取得
+		UserDAO dao = new UserDAO();
+		U_User loginUser = dao.getUserByMail(mail);
 
-		// ログイン処理
-		U_LoginLogic loginLogic = new U_LoginLogic();
-		U_User isLogin = loginLogic.execute(user);
-		System.out.println(isLogin);
+		// ユーザーデータが存在するかチェック）
+		if (loginUser != null) {
+			// ログイン処理
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			Boolean isLogin = encoder.matches(originalPass, loginUser.getPass());
+			System.out.println(isLogin);
+			// ログイン判定
+			if (isLogin && loginUser.getActive() == 1) {
+				// ログイン成功時の処理
 
-		// ログイン成功時の処理(-1のときは失敗）
-		if (isLogin != null) {
+				// ユーザー情報をセッションスコープに保存
+				HttpSession session = request.getSession();
+				session.setAttribute("loginUser", loginUser);
 
-			// ユーザー情報をセッションスコープに保存
-			HttpSession session = request.getSession();
-			session.setAttribute("loginUser", user);
+				// メイン画面サーブレットにフォワード
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/U_Main");
+				dispatcher.forward(request, response);
+			}
 
-			// メイン画面（サーブレット）にフォワード
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/U_Main");
-			dispatcher.forward(request, response);
-
-		} else {
-			// エラーメッセージをリクエストスコープに保存
-			request.setAttribute("errorMessage", "ログインできません");
-
-			//再度ログイン画面に遷移
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/u_Login.jsp");
-			dispatcher.forward(request, response);
 		}
+		// ログイン失敗時の処理
+
+		// エラーメッセージをリクエストスコープに保存
+		request.setAttribute("errorMessage", "メールまたはパスワードが間違っています");
+
+		//ログイン画面jspにフォワード
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/u_Login.jsp");
+		dispatcher.forward(request, response);
 	}
 
 }

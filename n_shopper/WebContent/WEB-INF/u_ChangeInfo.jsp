@@ -31,84 +31,70 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 			<br>
 			<h2>会員情報変更</h2>
 			<form action="/shopper/U_ChangeInfo" method="post" class="container my-4">
-				<!--
-		<li>メールアドレス<input type="text" name="mail"
-			placeholder="</%=user.getMail()%>" /></li>
-		<li>生年月日<input type="text" name="birthday"
-				placeholder="</%=user.getBirthday()%>" /> <label
-					for="exampleInputEmail1" class="form-label">エリア選択</label>
-		 -->
 				<h3 class="my-2">基本情報変更</h3>
-				<div class="form-outline mb-1">
-					<label for="email" class="form-label">メールアドレス</label> <input
-						type="email" class="form-control" id="email" name="email"
-						value="<%=user.getMail()%>" placeholder="メールアドレスを入力してください" required="required">
-						<span class="label label-danger">${errorMessage}</span>
+				<div class="form-outline mb-1" id="email_outline">
+					<label for="email"  class="form-label">メールアドレス</label>
+					<input type="email"  class="form-control" id="email" name="email" value="<%=user.getMail()%>" required="required" placeholder="abc12345@example.co.jp"/>
+			    	<div id="validationServerUsernameFeedback" class="invalid-feedback">有効なメールアドレスを入力してください</div>
 				</div>
-				<div class="form-outline mb-1">
-					<label class="form-label" for="name">ニックネーム</label> <input
-						type="text" id="name" class="form-control" name="name"
-						value="<%=user.getName()%>" placeholder="ニックネームを入力してくださいください" required="required"/>
+				<div class="form-outline mb-1" id="name_outline">
+					<label class="form-label" for="name">ユーザー名</label>
+					<input	type="text" id="name" class="form-control" name="name" value="<%=user.getName()%>" required="required" placeholder="ユーザー名"/>
+			    	<div id="validationServerUsernameFeedback" class="invalid-feedback">ユーザー名を入力してください</div>
 				</div>
 				<div class="row mb-1">
-					<div class="form-outline col-lg">
+					<div class="form-outline col-lg" id="gender_outline">
 						<label class="form-label" for="flexRadioDefault">性別</label>
-						<div>
+						<div id="gender">
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="gender"
-									id="male" value="1"
+								<input class="form-check-input" type="radio" name="gender" id="male" value="1" required
 									<%if(user.getGender()==1){ %>
 									checked="checked"
 									<%} %>
-									> <label class="form-check-label"
-									for="male"> 男性 </label>
+								>
+								<label	class="form-check-label" for="male"> 男性 </label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="gender"
-									id="female" value="2"
+								<input class="form-check-input" type="radio" name="gender" id="female" value="2" required
 									<%if(user.getGender()==2){ %>
 									checked="checked"
 									<%} %>
-									> <label class="form-check-label"
-									for="female"> 女性 </label>
+								>
+								<label class="form-check-label"  for="female"> 女性 </label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="radio" name="gender"
-									id="other" value="3"
+								<input class="form-check-input" type="radio" name="gender" id="other" value="3" required
 									<%if(user.getGender()==3){ %>
 									checked="checked"
 									<%} %>
-
-									> <label
-									class="form-check-label" for="other"> 回答しない </label>
+								>
+								<label class="form-check-label"  for="other"> 回答しない </label>
 							</div>
+			    			<div id="invalid-feedback-gender" class="invalid-feedback">性別を入力してください</div>
 						</div>
-						<!--
-										<li>性別<%=user.getGender()%> <input type="radio" name="gender"
-				value="0">男<br> <input type="radio" name="gender"
-				value="1">女<br> <input type="radio" name="gender"
-				value="2">不明<br>
-			</li>
-										 -->
-					</div><!-- 依頼：生年月日が引き継げたら助かります。 -->
+					</div>
 					<div class="form-outline col-lg">
 						<label for="exampleInputEmail1" class="form-label">生年月日</label>
 						<div class="row">
-							<div class="col">
+							<div class="col" id="year-select_outline">
 								<select id="year-select" class="form-select"
-									aria-label="Default select example" name="year">
+									name="year" required="required"
+									onchange="CheckSelectedMonth()" aria-label="誕生年" disabled>
 								</select>
+						    	<div id="validationServerUsernameFeedback" class="invalid-feedback">年を入力してください</div>
 							</div>
-							<div class="col">
+							<div class="col" id="month-select_outline">
 								<select id="month-select" class="form-select"
-									aria-label="Default select example" name="month"
-									onchange="CheckSelectedMonth(this)">
+									name="month" required="required"
+									onchange="CheckSelectedMonth()" aria-label="誕生月" disabled>
 								</select>
+						    	<div id="validationServerUsernameFeedback" class="invalid-feedback">月を入力してください</div>
 							</div>
-							<div class="col">
+							<div class="col" id="day-select_outline">
 								<select id="day-select" class="form-select"
-									aria-label="Default select example" name="day">
+									name="day" required="required" aria-label="誕生日" disabled>
 								</select>
+						    	<div id="validationServerUsernameFeedback" class="invalid-feedback">日を入力してください</div>
 							</div>
 
 						</div>
@@ -136,7 +122,7 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 					</div>
 					<div class="col">
 						<select id="prefecture" class="form-select"
-							aria-label="Default select example" disabled="disabled"
+							aria-label="Default select example"
 							onchange="CheckSelectedPrefecture(this)" required="required">
 							<option value="" >都道府県を選択してください</option>
 							<%
@@ -156,7 +142,7 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 					<div class="col">
 						<select id="area" class="form-select"
 							aria-label="Default select example" name="area"
-							disabled="disabled" required="required">
+							required="required">
 							<option value="" >エリアを選択してください</option>
 							<%
 							for (Area area : area_List) {

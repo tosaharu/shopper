@@ -5,60 +5,81 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import model.U_OtherUser;
 import model.U_User;
 
+/**
+ * ユーザーに関する情報をDBとやり取りするDAO
+ * @author Haruka Sato
+ */
 public class UserDAO {
 
 	public static final String URL = "jdbc:mysql://localhost:3306/shopper";
 	public static final String NAME = "root";
 	public static final String PASS = "root";
 
-	//メールアドレスが存在するかチェック
-	public boolean CheckMail(String mail) {
+	/**
+	 * メールアドレスがDBに存在するかチェック（主に新規会員登録時のバリデーションで使用）
+	 * @param mail ユーザーが入力したメールアドレス
+	 * @return メールアドレスが存在する場合はtrue、しない場合にfalseを返す
+	 */
+	public boolean checkMail(String mail) {
 
-		//データベースに接続してみる。
+		//ドライバのロード
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");//ドライバのロード
+			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 
-		try (Connection conn = DriverManager.getConnection(URL, NAME, PASS)) {
+		// データベース接続～SQL実行
+		try {
+			// データベース接続
+			Connection conn = DriverManager.getConnection(URL, NAME, PASS);
+
+			// SQL文の作成
 			PreparedStatement ps = conn.prepareStatement("SELECT * from user where mail = ?");
 			ps.setString(1, mail);
-			//select実行格納
+
+			// SELECT実行
 			ResultSet rs = ps.executeQuery();
+
+			// 合致した結果があるか確認
 			if (rs.next()) {
 				return true;
-
 			}
-			return false;
+
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-			// TODO: handle exception
 			return false;
 		}
 		return false;
 	}
 
-	//	CheckUserログインできるか
-	public U_User CheckUser(U_User user) {
+	/**
+	 * メールアドレスをもとにユーザーデータを取得する（主にログインで使用）
+	 * @param user ユーザーのデータ
+	 * @return ログイン可能であれば、そのユーザーデータをUser型を、可能でない場合はnullを返す
+	 */
+	public U_User getUserByMail(String mail) {
 
-		Connection conn = null;
-		//データベースに接続してみる
-
+		//ドライバのロード
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver"); //ドライバノロード
-			conn = DriverManager.getConnection(URL, NAME, PASS);
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 
-			//SQL クエリ文を生成する
+		// データベース接続～SQL実行
+		try {
+			// データベース接続
+			Connection conn = DriverManager.getConnection(URL, NAME, PASS);
+
+			// SQL文の作成
 			String sql = "select * from user as a "
 					+ "LEFT JOIN area AS b "
 					+ "ON a.area_id = b.id "
@@ -66,22 +87,24 @@ public class UserDAO {
 					+ "ON b.prefecture_id = c.id "
 					+ "LEFT JOIN region AS d "
 					+ "ON c.region_id = d.id "
-					+ "where a.mail = ? and a.pass = ?";
+					+ "where a.mail = ?";
 
-			//ステートメント化
-			PreparedStatement stat = conn.prepareStatement(sql);
-			stat.setString(1, user.getMail());
-			stat.setString(2, user.getPass());
-			//SQL実行
-			ResultSet result = stat.executeQuery();
+			PreparedStatement ps = conn.prepareStatement(sql);
+			ps.setString(1, mail);
 
+			// SELECT実行
+			ResultSet result = ps.executeQuery();
+
+			// 合致した結果を格納
 			if (result.next()) {
+				// 合致するデータがある場合
+				U_User user = new U_User();
 				user.setUser_id(result.getInt("a.id"));
 				user.setMail(result.getString("a.mail"));
 				user.setPass(result.getString("a.pass"));
 				user.setName(result.getString("a.name"));
 				user.setGender(result.getInt("a.gender"));
-				user.setBirthday(result.getDate("a.birthday"));
+				user.setBirthday(result.getTimestamp("a.birthday").toLocalDateTime());
 				user.setRegion_id(result.getInt("d.id"));
 				user.setRegion_name(result.getString("d.name"));
 				user.setPrefecture_id(result.getInt("c.id"));
@@ -91,87 +114,62 @@ public class UserDAO {
 				user.setActive(result.getInt("a.active_flag"));
 				return user;
 			} else {
-				// ng
+				// 合致するデータがない場合
 				return null;
 			}
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace(); //ドライバクラスが見つからなかったとき
-			return null;
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
-		} finally// ※通信切断の詳細 旧式のやり方
-		{
-			if (conn != null) {
-				try {
-					conn.close();//通信切断
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				conn = null;
-			}
 		}
-		//セッションに保存しておくデータの抽出
-
 	}
 
 	/**
-	 * 志摩作、佐藤調整
-	 * @param user
+	 * ユーザーデータをDBに新規登録する
+	 * @param user ユーザーのデータ
+	 * @return 正常に処理が完了した場合にtrue、しなかった場合にfalseを返す
 	 */
 	public boolean userInsert(U_User user) {
-		//util date ⇒ sql date
-		long timeInMilliSeconds = user.getBirthday().getTime();
-		java.sql.Date sqlDate = new java.sql.Date(timeInMilliSeconds);
+		/*
+		 * Date型を使用する旧方式
+		 */
+		//		//util date を sql date に変換
+		//		long timeInMilliSeconds = user.getBirthday().getTime();
+		//		java.sql.Date sqlDate = new java.sql.Date(timeInMilliSeconds);
 
-		//ﾃﾞｰﾀﾍﾞｰｽ接続
-		try (Connection conn = DriverManager.getConnection(URL, NAME, PASS)) {
+		//ドライバのロード
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 
-			//			PreparedStatement pst = conn.prepareStatement(
-			//
-			//
-			//					"SELECT mail FROM user where mail=? ");
-			//			pst.setString(1, user.getMail());//メールアドレス
-			//		//	System.out.println("preparedStatement:" + pst);
-			//			//select実行格納
-			//			ResultSet rs = pst.executeQuery();
-			//
-			//		//	System.out.println("result set:" + rs);
-			//			user.setMail(rs.getString("mail"));//データベースのメールアドレス
-			//			String mail_db = rs.getString("mail");
-			//			System.out.println("チェック：" + mail_db);
-			//
-			//			int rs_mail = pst.executeUpdate();//帰ってくる件数
-			//
-			//			if (!(rs_mail!=1)) {
-			//				//同じメールアドレスがすでに使われていたら、新規登録画面に戻しエラー文を表示
-			//				System.out.println("同じメールアドレスがすでに登録されている");
-			//
-			//				return false;
-			//			} else {
-			//				//↑追加した処理 志摩
+		// データベース接続～SQL実行
+		try {
+			// データベース接続
+			Connection conn = DriverManager.getConnection(URL, NAME, PASS);
 
+			// SQL文の作成
 			PreparedStatement ps = conn.prepareStatement(
 					"INSERT INTO user (mail,pass,name,birthday,gender,area_id,active_flag) VALUES(?,?,?,?,?,?,?)");
-			ps.setString(1, user.getMail());//メールアドレス
-			ps.setString(2, user.getPass());//パスワード
-			ps.setString(3, user.getName());//表示名
-			ps.setDate(4, sqlDate);//生年月日
+			ps.setString(1, user.getMail());
+			ps.setString(2, user.getPass());
+			ps.setString(3, user.getName());
+			// Localdatetime型→Timestamp型(sql)に変換
+			Timestamp birthday = Timestamp.valueOf(user.getBirthday());
+			ps.setTimestamp(4, birthday);
+			ps.setInt(5, user.getGender());
+			ps.setInt(6, user.getArea_id());
+			// 入会状態である「1」でフラグを設定
+			ps.setInt(7, 1);
 
-			ps.setInt(5, user.getGender());//性別
-			ps.setInt(6, user.getArea_id());//エリア
-			ps.setInt(7, 1);//登録中:0・退会中:1
-
+			// INSERT実行
 			int result = ps.executeUpdate();
 
+			// 処理の結果を確認
 			if (result != 1) {
-
+				// 正常に完了しなかった場合(正常に処理が完了するのは result = 1 の場合のみ)
 				return false;
 			}
-
 			return true;
 
 		} catch (SQLException e) {
@@ -180,203 +178,227 @@ public class UserDAO {
 		}
 	}
 
-	public U_User selectUser(U_User user) {
-
-		//データベースに接続してみる。
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");//ドライバのロード
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		try (Connection conn = DriverManager.getConnection(URL, NAME, PASS)) {
-			PreparedStatement ps = conn.prepareStatement(
-					"SELECT mail,pass,name,birthday,gender,area_id,active_flag from user where id = "
-							+ user.getUser_id() + ";");
-			//select実行格納
-			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
-				user.setMail(rs.getString("mail"));
-				user.setPass(rs.getString("pass"));
-				user.setName(rs.getString("name"));
-
-				//				user.setBirthday(rs.getDate("BIRTHDAY"));
-				java.sql.Date birthday = rs.getDate("birthday");
-				Date utilDate = new Date(birthday.getTime());
-				user.setBirthday(utilDate);
-
-				user.setArea_id(rs.getInt("area_id"));
-				user.setGender(rs.getInt("gender"));
-
-			}
-			return user;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-			// TODO: handle exception
-			return null;
-		}
-		return null;
-	}
-
-	/***
-	 * 志摩：会員情報変
+	/**
+	 * ユーザーIDを使用してユーザー情報を取得する（不要になった？使用していないかもなのでいったんコメントアウト）
 	 * @param user
+	 * @return
+	 */
+	//	public U_User selectUser(U_User user) {
+	//
+	//		//ドライバのロード
+	//		try {
+	//			Class.forName("com.mysql.cj.jdbc.Driver");
+	//		} catch (ClassNotFoundException e) {
+	//			e.printStackTrace();
+	//		}
+	//
+	//		// データベース接続～SQL実行
+	//		try {
+	//			// データベース接続
+	//			Connection conn = DriverManager.getConnection(URL, NAME, PASS);
+	//
+	//			// SQL文の作成
+	//			PreparedStatement ps = conn.prepareStatement(
+	//					"SELECT mail,pass,name,birthday,gender,area_id,active_flag from user where id = "
+	//							+ user.getUser_id() + ";");
+	//			// SELECT実行
+	//			ResultSet rs = ps.executeQuery();
+	//			if (rs.next()) {
+	//				user.setMail(rs.getString("mail"));
+	//				user.setPass(rs.getString("pass"));
+	//				user.setName(rs.getString("name"));
+	//
+	//				//				user.setBirthday(rs.getDate("BIRTHDAY"));
+	//				java.sql.Date birthday = rs.getDate("birthday");
+	//				Date utilDate = new Date(birthday.getTime());
+	//				user.setBirthday(utilDate);
+	//
+	//				user.setArea_id(rs.getInt("area_id"));
+	//				user.setGender(rs.getInt("gender"));
+	//				return user;
+	//
+	//			}else {
+	//				return null;
+	//			}
+	//
+	//		} catch (SQLException e) {
+	//			e.printStackTrace();
+	//			return null;
+	//		}
+	//	}
+
+	/**
+	 * ユーザーデータを変更する
+	 * @param user 更新に使用したいユーザーの新しいデータ
+	 * @return 正常に処理が完了した場合にtrue、しなかった場合にfalseを返す
 	 */
 	public boolean userChangeInfo(U_User user) {
-		// util date ⇒ sql date
-		long timeInMilliSeconds = user.getBirthday().getTime();
-		java.sql.Date sqlDate = new java.sql.Date(timeInMilliSeconds);
+		//ドライバのロード
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-			return false;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
 		}
-		//ﾃﾞｰﾀﾍﾞｰｽ接続
-		try (Connection conn = DriverManager.getConnection(URL, NAME, PASS)) {
 
-			//SELECT文を準備
-			PreparedStatement ps = conn.prepareStatement(
-					//					"UPDATE user SET MAIL=?,NAME=?,BIRTHDAY=?, GENDER=?,AREA_ID=?,ACTIVE_FlAG=? " + "where id = "
-					"UPDATE user SET MAIL=?,NAME=?, GENDER=?,AREA_ID=?,ACTIVE_FlAG=? where id =?;");
+		// データベース接続～SQL実行
+		try {
+			// データベース接続
+			Connection conn = DriverManager.getConnection(URL, NAME, PASS);
 
-			System.out.println("daoを実行しました");
-			//			user.setMail(rs.getString("mail"));
-			//			user.setName(rs.getString("name"));
-			//			user.setBirthday(rs.getDate("birthday"));
-			//			user.setGender(rs.getInt("genber"));
-			//			user.setArea_id(rs.getInt("area_id"));
-			//			user.setActive(rs.getInt(1));
-			ps.setString(1, user.getMail());//メールアドレス
-			ps.setString(2, user.getName());//表示名
-			ps.setInt(3, user.getGender());//性別
-			ps.setInt(4, user.getArea_id());//エリア
-			ps.setInt(5, 1);//登録中:1・退会中:0
-			ps.setInt(6, user.getUser_id());
+			// SQL文の作成
+			PreparedStatement ps = conn
+					.prepareStatement("UPDATE user SET mail=?,name=?,gender=?,area_id=? WHERE id =?;");
 
-			//select実行格納
+			ps.setString(1, user.getMail());
+			ps.setString(2, user.getName());
+			ps.setInt(3, user.getGender());
+			ps.setInt(4, user.getArea_id());
+			ps.setInt(5, user.getUser_id());
+
+			// UPDATE実行
 			int result = ps.executeUpdate();
+
+			// 処理の結果を確認
 			if (result != 1) {
+				// 正常に完了しなかった場合(正常に処理が完了するのは result = 1 の場合のみ)
+				return false;
 			}
+			return true;
 
 		} catch (SQLException e) {
-			System.out.println("上書きに失敗しました");
+			System.out.println("ユーザーデータ変更に失敗しました");
 			e.printStackTrace();
 			return false;
 		}
-		return true;
-
-	}
-
-	/***
-	 * 志摩：会員退会処理
-	 * @param user
-	 */
-	public U_User userQuit(U_User user) {
-
-		System.out.println(user.getUser_id() + "dao実行します");
-		//ﾃﾞｰﾀﾍﾞｰｽ接続
-		try (Connection conn = DriverManager.getConnection(URL, NAME, PASS)) {
-			PreparedStatement ps = conn.prepareStatement(
-					//SELECT文を準備
-					"UPDATE user SET active_flag= ? " + "where id = " + user.getUser_id() + ";");
-
-			ps.setInt(1, 0);//退会中:0・継続中:1
-
-			int result = ps.executeUpdate();
-		} catch (SQLException e) {
-			System.out.println("退会できませんでした");
-			e.printStackTrace();
-		}
-		return user;
 	}
 
 	/**
-	 * 志摩：パスワード変更　※パスワード再設定とは別です
-	 * @param user
-	 * @return
+	 * 退会処理（退会フラグを立てる）
+	 * @param user 退会したいユーザーのデータ
+	 * @return 正常に処理が完了した場合にtrue、しなかった場合にfalseを返す
 	 */
-	public U_User userNewPass(U_User user) {
-
-		System.out.println(user.getUser_id());
-
-		System.out.println(user.getPass() + "dao実行します");
-		//ﾃﾞｰﾀﾍﾞｰｽ接続
-		try (Connection conn = DriverManager.getConnection(URL, NAME, PASS)) {
-			PreparedStatement ps = conn.prepareStatement(
-					//SELECT文を準備
-					"UPDATE user SET PASS= ? " + "where id = " + user.getUser_id() + ";");
-
-			ps.setString(1, user.getPass());
-
-			int result = ps.executeUpdate();
-		} catch (SQLException e) {
-			System.out.println("パスワードを変更できませんでした");
+	public boolean userQuit(U_User user) {
+		//ドライバのロード
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		return user;
+
+		// データベース接続～SQL実行
+		try {
+			// データベース接続
+			Connection conn = DriverManager.getConnection(URL, NAME, PASS);
+
+			// SQL文の作成
+			PreparedStatement ps = conn.prepareStatement("UPDATE user SET active_flag= ? WHERE id = ?;");
+
+			// 退会状態である「0」でフラグをアップデート
+			ps.setInt(1, 0);
+			ps.setInt(2, user.getUser_id());
+
+			// UPDATE実行
+			int result = ps.executeUpdate();
+
+			// 処理の結果を確認
+			if (result != 1) {
+				// 正常に完了しなかった場合(正常に処理が完了するのは result = 1 の場合のみ)
+				return false;
+			}
+			return true;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	/**
+	 * パスワード変更
+	 * @param user パスワード変更したいユーザーのデータ
+	 * @return 正常に処理が完了した場合にtrue、しなかった場合にfalseを返す
+	 */
+	public boolean userNewPass(U_User user) {
+		//ドライバのロード
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		// データベース接続～SQL実行
+		try {
+			// データベース接続
+			Connection conn = DriverManager.getConnection(URL, NAME, PASS);
+
+			// SQL文の作成
+			PreparedStatement ps = conn.prepareStatement("UPDATE user SET PASS= ? WHERE id = ?;");
+
+			ps.setString(1, user.getPass());
+			ps.setInt(2, user.getUser_id());
+
+			// UPDATE実行
+			int result = ps.executeUpdate();
+
+			// 処理の結果を確認
+			if (result != 1) {
+				// 正常に完了しなかった場合(正常に処理が完了するのは result = 1 の場合のみ)
+				return false;
+			}
+			return true;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	//パスワード再発行のためのユーザ照合
 	public U_User CollationUser(U_User user) {
-		//util date ⇒ sql date
-		long timeInMilliSeconds = user.getBirthday().getTime();
-		java.sql.Date sqlDate = new java.sql.Date(timeInMilliSeconds);
-
-		//データ保存用リストを準備
-		//List<User> list = new ArrayList<User>();
-		Connection conn = null;
-		//データベースに接続してみる
+		//ドライバのロード
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver"); //ドライバノロード
-			conn = DriverManager.getConnection(URL, NAME, PASS);
-			String sql = "SELECT * FROM user WHERE mail=? and birthday=?";
-			//ステートメント化
-			PreparedStatement stat = conn.prepareStatement(sql);
-			stat.setString(1, user.getMail());
-			stat.setDate(2, (java.sql.Date) user.getBirthday());
-			System.out.println(user.getMail());
-			System.out.println(user.getBirthday());
-			//SQLを実行し結果を得る
-			ResultSet result = stat.executeQuery();
+			Class.forName("com.mysql.cj.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 
-			while (result.next()) {
+		// データベース接続～SQL実行
+		try {
+			// データベース接続
+			Connection conn = DriverManager.getConnection(URL, NAME, PASS);
+
+			// SQL文の作成
+			String sql = "SELECT * FROM user WHERE mail=? and birthday=?";
+			PreparedStatement ps = conn.prepareStatement(sql);
+
+			ps.setString(1, user.getMail());
+
+			// Localdatetime型→Timestamp型(sql)に変換
+			Timestamp birthday = Timestamp.valueOf(user.getBirthday());
+			ps.setTimestamp(2, birthday);
+
+			// SELECT実行
+			ResultSet result = ps.executeQuery();
+
+			// 合致した結果を格納
+			if (result.next()) {
+				// 合致する結果がある場合
 				user.setUser_id(result.getInt("id"));
 				user.setMail(result.getString("mail"));
 				user.setPass(result.getString("pass"));
 				user.setName(result.getString("name"));
 				user.setGender(result.getInt("gender"));
-				user.setBirthday(result.getDate("birthday"));
+				user.setBirthday(result.getTimestamp("a.birthday").toLocalDateTime());
 				user.setArea_id(result.getInt("area_id"));
 				user.setActive(result.getInt("active_flag"));
 				return user;
+			}else {
+				return null;
 			}
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace(); //ドライバクラスが見つからなかったとき
-			return null;
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
-		} finally// ※通信切断の詳細 旧式のやり方
-		{
-			if (conn != null) {
-				try {
-					conn.close();//通信切断
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				conn = null;
-			}
 		}
-		return null;
 	}
 
 	//パスワード再発行のupdate文

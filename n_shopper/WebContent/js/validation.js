@@ -1,9 +1,9 @@
 /**
  *
  */
-let ol = document.getElementById('email_outline');
-console.log(ol)
 
+// フォーカスが外れた際にバリデーションし、フォーカスされたときにバリデーションを解除する
+// ラジオボタン以外の選択肢HTML構造用
 function activateValidation(outline_id, form_id,) {
 	let outline = document.getElementById(outline_id);
 	console.log(outline)
@@ -32,6 +32,8 @@ function activateValidation(outline_id, form_id,) {
 	}, false)
 }
 
+// フォーカスが外れた際にバリデーションし、フォーカスされたときにバリデーションを解除する
+// ラジオボタンの選択肢HTML構造用
 function activateRadioValidation(outline_id, form_class, invalid_feedback_id) {
 	let outline = document.getElementById(outline_id);
 	console.log(outline)
@@ -62,6 +64,8 @@ function activateRadioValidation(outline_id, form_class, invalid_feedback_id) {
 	}
 }
 
+// フォーカスが外れた際にバリデーションし、フォーカスされたときにバリデーションを解除する
+// 2か所のパスワードの入力が一致していることをバリデートする
 function activateDoublePassValidation(outline_id, form_id, reference_id) {
 	let outline = document.getElementById(outline_id);
 	console.log(outline)
@@ -110,6 +114,8 @@ function activateDoublePassValidation(outline_id, form_id, reference_id) {
 	}, false)
 }
 
+// フォーカスが外れた際にバリデーションし、フォーカスされたときにバリデーションを解除する
+// メールアドレスがDBに存在しないことをバリデートする
 function activateExistingMailValidation(outline_id, form_id) {
 	let outline = document.getElementById(outline_id);
 	console.log(outline)
@@ -123,6 +129,7 @@ function activateExistingMailValidation(outline_id, form_id) {
 	}, false)
 
 
+	// フォーカスが外れた際にバリデート
 	form.addEventListener('blur', function () {
 		$.ajax({
 			url: "Ajax_CheckUserMail",
@@ -156,7 +163,6 @@ function activateExistingMailValidation(outline_id, form_id) {
 			let insertAt = form.nextElementSibling;
 			console.log(insertAt);
 			insertAt.innerHTML = validationMessage;
-			//やりたい処理
 		}).fail(function () {
 			//通信失敗時のコールバック
 			console.log("通信失敗");
@@ -167,6 +173,7 @@ function activateExistingMailValidation(outline_id, form_id) {
 	}, false)
 }
 
+// 各選択肢にバリデーションをかける
 activateExistingMailValidation('email_outline', 'email');
 activateValidation('pass_outline', 'password1');
 activateDoublePassValidation('pass2_outline', 'password2', 'password1');
@@ -178,26 +185,4 @@ activateValidation('day-select_outline', 'day-select');
 activateValidation('region_outline', 'region');
 activateValidation('prefecture_outline', 'prefecture');
 activateValidation('area_outline', 'area');
-
-// $('#email').on('blur', function () {
-// 	$.ajax({
-// 		url: "Ajax_CheckUserMail",
-// 		type: "GET",
-// 		data: { mail: $('#email').val() }
-// 	}).done(function (result) {
-// 		//通信成功時のコールバック
-// 		let checkMail = Number(result);
-// 		if (checkMail == 0) {
-// 			console.log("登録済のメールアドレス無し");
-// 		} else if (checkMail == 1) {
-// 			console.log("登録済のメールアドレス有り");
-// 		}
-// 		//やりたい処理
-// 	}).fail(function () {
-// 		//通信失敗時のコールバック
-// 		console.log("通信失敗");
-// 	}).always(function () {
-// 		//常に実行する処理
-// 	});
-// })
 

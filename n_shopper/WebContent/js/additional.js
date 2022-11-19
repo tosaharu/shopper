@@ -116,6 +116,44 @@ function createFirstOptionElements(el) {
   el.appendChild(op);
 }
 
+// function getElementByValue(year) {
+//   let el = document.querySelector(`#year-select>option[value='${year}']`);
+//   console.log("valueの値によって要素を持ってくるテスト");
+//   console.log(el.value);
+// }
+// getElementByValue(1989);
+
+//ログインセッションがある場合に、ユーザーの誕生日データをデフォルト表示させる
+window.onload = function setBirthdayData() {
+  $.ajax({
+    url: "Ajax_GetUserBirthday",
+    type: "GET",
+    dataType: "json",
+  }).done(function (result) {
+    let json = JSON.stringify(result);
+    let obj = JSON.parse(json);
+    let year = obj["year"];
+    let month = obj["month"];
+    let day = obj["day"];
+
+    let user_year = document.querySelector(`#year-select>option[value='${year}']`);
+    user_year.setAttribute("selected", "selected");
+
+    let user_month = document.querySelector(`#month-select>option[value='${month}']`);
+    user_month.setAttribute("selected", "selected");
+
+    let user_day = document.querySelector(`#day-select>option[value='${day}']`);
+    user_day.setAttribute("selected", "selected");
+    console.log("通信成功");
+
+  }).fail(function (result) {
+    //通信失敗時のコールバック
+    console.log("通信失敗");
+  }).always(function (result) {
+    //常に実行する処理
+    console.log("通信完了");
+  })
+}
 
 //年月の選択に応じて、選択可能な日を表示する
 function CheckSelectedMonth() {
@@ -198,7 +236,7 @@ function selectAndInsertGender(getFrom, insertInto) {
       break;
     }
   }
-console.log(val)
+  console.log(val)
   switch (val) {
     case "1":
       val = "男性";

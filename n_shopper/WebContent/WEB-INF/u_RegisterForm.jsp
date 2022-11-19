@@ -51,8 +51,8 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 				    	<div id="validationServerUsernameFeedback" class="invalid-feedback">パスワードが一致しません</div>
 					</div>
 					<div class="form-outline mb-1" id="name_outline">
-						<label class="form-label" for="name">ニックネーム</label>
-						<input	type="text" id="name" class="form-control" name="name" required="required" placeholder="アプリ上で表示される名前です"/>
+						<label class="form-label" for="name">ユーザー名</label>
+						<input	type="text" id="name" class="form-control" name="name" required="required" placeholder="ユーザー名"/>
 				    	<div id="validationServerUsernameFeedback" class="invalid-feedback">ユーザー名を入力してください</div>
 					</div>
 					<div class="row mb-1">
@@ -74,7 +74,7 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 				    			<div id="invalid-feedback-gender" class="invalid-feedback">性別を入力してください</div>
 							</div>
 						</div>
-						<div class="form-outline col-lg-7"> <!-- 依頼：生年月日をnot valueで表示できますか？（required="required"できたら助かります。） -->
+						<div class="form-outline col-lg-7">
 							<label for="exampleInputEmail1" class="form-label">生年月日</label>
 							<div class="row">
 								<div class="col" id="year-select_outline">

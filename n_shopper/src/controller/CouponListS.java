@@ -47,7 +47,7 @@ public class CouponListS extends HttpServlet {
 
 
 
-		RequestDispatcher disp = request.getRequestDispatcher("WEB-INF/u_couponList.jsp");
+		RequestDispatcher disp = request.getRequestDispatcher("/WEB-INF/u_couponList.jsp");
 		disp.forward(request, response);
 		return;
 	}
