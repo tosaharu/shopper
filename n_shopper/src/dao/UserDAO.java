@@ -319,7 +319,7 @@ public class UserDAO {
 	 * @param user パスワード変更したいユーザーのデータ
 	 * @return 正常に処理が完了した場合にtrue、しなかった場合にfalseを返す
 	 */
-	public boolean userNewPass(U_User user) {
+	public boolean userChangePass(U_User user) {
 		//ドライバのロード
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");

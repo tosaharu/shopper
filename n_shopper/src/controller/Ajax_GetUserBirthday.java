@@ -57,6 +57,9 @@ public class Ajax_GetUserBirthday extends HttpServlet {
 		    System.out.println(jsonStringBirthday);
 
 		    response.getWriter().write(jsonStringBirthday);
+		}else {
+			System.out.println("ログイン判定なし、戻り値なし");
+
 		}
 	}
 

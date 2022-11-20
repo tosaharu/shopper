@@ -31,11 +31,9 @@ public class U_ChangeInfo extends HttpServlet {
 		dispatcher.forward(request, response);
 	}
 
+	// ajaxで呼び出す仕様に変更
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		//エリアデータを取得してリクエストスコープに入れる
-		GetList.AreaPrefectureRegion(request);
-
 		//文字化け対策
 		request.setCharacterEncoding("UTF-8");
 
@@ -65,15 +63,11 @@ public class U_ChangeInfo extends HttpServlet {
 			user = userDAO.getUserByMail(user.getMail());
 			session.setAttribute("loginUser", user);
 			System.out.println("更新に成功しているので、成功した際の表示をjspに出す");
+			response.getWriter().append("1");
 		}else {
 			System.out.println("更新に失敗しているので、失敗した際の表示をjspに出す");
+			response.getWriter().append("0");
 		}
-
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/u_ChangeInfo.jsp");
-		dispatcher.forward(request, response);
-
 	}
-
-	//	}
 
 }

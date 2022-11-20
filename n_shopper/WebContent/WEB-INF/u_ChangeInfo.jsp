@@ -30,7 +30,7 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 			class="d-flex flex-column justify-content-center align-items-center mx-auto" style="width:100%;max-width:720px;" >
 			<br>
 			<h2>会員情報変更</h2>
-			<form action="/shopper/U_ChangeInfo" method="post" class="container my-4" id="main_form">
+			<form method="post" class="container my-4" id="main_form">
 				<h3 class="my-2">基本情報変更</h3>
 				<div class="form-outline mb-1" id="email_outline">
 					<label for="email"  class="form-label">メールアドレス</label>
@@ -102,7 +102,7 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 				</div>
 				<label for="areas" class="form-label">エリア選択</label>
 				<div class="row">
-					<div class="col">
+					<div class="col" id="region_outline">
 						<select id="region" class="form-select"
 							aria-label="Default select example"
 							onchange="CheckSelectedRegion(this)" required="required">
@@ -119,8 +119,9 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 							}
 							%>
 						</select>
+				    	<div id="validationServerUsernameFeedback" class="invalid-feedback">地方を入力してください</div>
 					</div>
-					<div class="col">
+					<div class="col" id="prefecture_outline">
 						<select id="prefecture" class="form-select"
 							aria-label="Default select example"
 							onchange="CheckSelectedPrefecture(this)" required="required">
@@ -138,8 +139,9 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 							}
 							%>
 						</select>
+				    	<div id="validationServerUsernameFeedback" class="invalid-feedback">都道府県を入力してください</div>
 					</div>
-					<div class="col">
+					<div class="col" id="area_outline">
 						<select id="area" class="form-select"
 							aria-label="Default select example" name="area"
 							required="required">
@@ -158,23 +160,84 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 							}
 							%>
 						</select>
+				    	<div id="validationServerUsernameFeedback" class="invalid-feedback">エリアを入力してください</div>
 					</div>
 				</div>
 				<br>
 				<div class="row justify-content-center">
-					<button type="submit" id="subm"  class="btn btn-primary col-3" disabled>変更する</button>
+					<button type="button" id="subm1"  class="btn btn-primary col-3" disabled onclick="changeInfo()">変更する</button>
 				</div>
+
+					<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
+					  <div
+					    id="changeInfoToast"
+					    class="toast fade hide"
+					    role="alert"
+					    aria-live="assertive"
+					    aria-atomic="true"
+					  >
+					    <div class="toast-header">
+					      <img src="" width="20" height="20" class="rounded me-2" alt="result" />
+					      <strong class="me-auto">
+					      </strong>
+					      <small>たったいま</small>
+					      <button
+					        type="button"
+					        class="btn-close"
+					        data-bs-dismiss="toast"
+					        aria-label="Close"
+					      ></button>
+					    </div>
+					  </div>
+					  <div
+					    id="changePassToast"
+					    class="toast fade hide"
+					    role="alert"
+					    aria-live="assertive"
+					    aria-atomic="true"
+					  >
+					    <div class="toast-header">
+					      <img src="" width="20" height="20" class="rounded me-2" alt="result" />
+					      <strong class="me-auto">
+					      </strong>
+					      <small>たったいま</small>
+					      <button
+					        type="button"
+					        class="btn-close"
+					        data-bs-dismiss="toast"
+					        aria-label="Close"
+					      ></button>
+					    </div>
+					  </div>
+					</div>
 			</form>
 
 
-			<form action="/shopper/infoPass.jsp" class="container my-2">
+			<form class="container my-2" id="sub_form">
 				<h3 class="my-2">パスワード変更</h3>
+					<div class="form-outline mb-1" id="pass_outline">
+						<label class="form-label" for="password">現在のパスワード</label>
+						<input	type="password" id="password" class="form-control"  name="password"  required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" placeholder="半角の英小文字・英大文字・数字を含む8文字以上"/>
+				    	<div id="validationServerUsernameFeedback" class="invalid-feedback">パスワードを入力してください</div>
+					</div>
+					<div class="form-outline mb-1" id="newpass_outline">
+						<label class="form-label" for="newpassword1">新しいパスワード</label>
+						<input	type="password" id="newpassword1" class="form-control" required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" placeholder="半角の英小文字・英大文字・数字を含む8文字以上"/>
+				    	<div id="validationServerUsernameFeedback" class="invalid-feedback">パスワードを入力してください</div>
+					</div>
+					<div class="form-outline mb-1" id="newpass2_outline">
+						<label class="form-label" for="newpassword2">新しいパスワード（再入力）</label>
+						<input 	type="password" id="newpassword2" class="form-control"  name="newpassword" required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" placeholder="半角の英小文字・英大文字・数字を含む8文字以上"/>
+				    	<div id="validationServerUsernameFeedback" class="invalid-feedback">パスワードが一致しません</div>
+					</div>
+
+
 				<input type="hidden" name="pass" value="<%=user.getPass()%>">
 				<!-- 現在のパスワードをinfoPass.jspに送る -->
 				<input type="hidden" name="id" value="<%=user.getUser_id()%>">
 				<!-- 現在のパスワードをinfoPass.jspに送る -->
 				<div class="row justify-content-center">
-					<button type="submit" class="btn btn-primary col-3">変更する</button>
+					<button type="button" id="subm2"  class="btn btn-primary col-3" disabled onclick="changePass()">変更する</button>
 				</div>
 			</form>
 
@@ -192,5 +255,7 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 	<jsp:include page="/common_js.jsp" />
 	<script type="text/javascript" src="js/additional.js"></script>
 	<script type="text/javascript" src="js/validation.js"></script>
+	<script type="text/javascript" src="js/validation_forChangeInfo.js"></script>
+	<script type="text/javascript" src="js/changeinfo.js"></script>
 </body>
 </html>

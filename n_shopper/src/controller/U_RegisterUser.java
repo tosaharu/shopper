@@ -15,7 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import dao.UserDAO;
 import model.GetList;
-import model.U_LoginLogic;
 import model.U_User;
 
 /**
@@ -64,7 +63,7 @@ public class U_RegisterUser extends HttpServlet {
 
 		// 変換必要なデータ用の箱を用意
 		int gender = 0;
-		LocalDateTime birthday = LocalDateTime.of(0000, 00, 00, 00, 00, 00);
+		LocalDateTime birthday = LocalDateTime.of(0000, 1, 1, 00, 00, 00);
 		int area_id = 0;
 
 		// データ変換処理
@@ -79,7 +78,7 @@ public class U_RegisterUser extends HttpServlet {
 			int day = Integer.parseInt(request.getParameter("day"));
 //			String strBirthday = year + "/" + month + "/" + day + " 00:00:00";
 //			birthday = sdFormat.parse(strBirthday);
-			birthday.withYear(year).withMonth(month).withDayOfMonth(day);
+			birthday = birthday.withYear(year).withMonth(month).withDayOfMonth(day);
 
 		} catch (NumberFormatException e) {
 			// データ変換失敗の例外を取得
@@ -97,16 +96,11 @@ public class U_RegisterUser extends HttpServlet {
 
 		// データベースにinsert
 		UserDAO userDAO = new UserDAO();
-		userDAO.userInsert(user);
+		boolean isInserted = userDAO.userInsert(user);
 
-		// 登録データでそのままログイン処理
-		U_LoginLogic loginLogic = new U_LoginLogic();
-		U_User isLogin = loginLogic.execute(user);
-		System.out.println(isLogin);
-
-		// ログイン判定
-		if (isLogin != null) {
-			// ログイン成功時の処理
+		if(isInserted) {
+			// INSERT成功した場合
+			user = userDAO.getUserByMail(mail);
 
 			// ユーザー情報をセッションスコープに保存
 			HttpSession session = request.getSession();
@@ -116,14 +110,14 @@ public class U_RegisterUser extends HttpServlet {
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/U_Main");
 			dispatcher.forward(request, response);
 
-		} else {
+		}else {
 			// ログイン失敗時の処理
 
 			// エラーメッセージをリクエストスコープに保存
-			request.setAttribute("errorMessage", "ログインに失敗しました");
+			System.out.println("新規会員登録に失敗");
 
-			//ログイン画面jspにフォワード
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/u_Login.jsp");
+			// 新規会員登録画面jspにフォワード
+			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/u_RegisterForm.jsp");
 			dispatcher.forward(request, response);
 		}
 	}

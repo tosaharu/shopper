@@ -157,7 +157,7 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 
 						<button type="button" class="btn btn-secondary col-3 mx-2"
 							onclick="history.back(-1);return false;">戻る</button>
-						<button type="button" id="subm" class="btn btn-primary col-3 mx-2"
+						<button type="button" id="subm1" class="btn btn-primary col-3 mx-2"
 							data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="sendFormData()" disabled>
 							登録</button>
 					</div>
@@ -218,7 +218,7 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 	<jsp:include page="/common_js.jsp" />
 	<script type="text/javascript" src="js/additional.js"></script>
 	<script type="text/javascript" src="js/validation.js"></script>
-	<script type="text/javascript" src="js/add_validation.js"></script>
+	<script type="text/javascript" src="js/validation_forNewRegister.js"></script>
 </body>
 
 </html>

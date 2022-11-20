@@ -83,6 +83,7 @@ function CheckSelectedPrefecture(obj) {
 }
 
 //年月日の選択肢を生成
+console.log("年月日生成処理");
 let yearSelections = document.querySelector('#year-select');
 let monthSelections = document.querySelector('#month-select');
 let daySelections = document.querySelector('#day-select');
@@ -124,7 +125,8 @@ function createFirstOptionElements(el) {
 // getElementByValue(1989);
 
 //ログインセッションがある場合に、ユーザーの誕生日データをデフォルト表示させる
-window.onload = function setBirthdayData() {
+window.addEventListener('load', function setBirthdayData() {
+  console.log("BD表示処理");
   $.ajax({
     url: "Ajax_GetUserBirthday",
     type: "GET",
@@ -153,7 +155,7 @@ window.onload = function setBirthdayData() {
     //常に実行する処理
     console.log("通信完了");
   })
-}
+})
 
 //年月の選択に応じて、選択可能な日を表示する
 function CheckSelectedMonth() {
