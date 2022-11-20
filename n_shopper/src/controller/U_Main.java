@@ -30,6 +30,7 @@ public class U_Main extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		System.out.println("U_Mainのget実行");
 
 		// エリアデータを取得してリクエストスコープに入れる
 		GetList.AreaPrefectureRegion(request);
@@ -104,8 +105,7 @@ public class U_Main extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+	      //doGetメソッドへ処理を渡す
+	      doGet(request, response);
 	}
-
 }

@@ -106,7 +106,7 @@ public class U_RegisterUser extends HttpServlet {
 
 		// ログイン判定
 		if (isLogin != null) {
-			// ログイン成功時の処理(-1のときは失敗）
+			// ログイン成功時の処理
 
 			// ユーザー情報をセッションスコープに保存
 			HttpSession session = request.getSession();

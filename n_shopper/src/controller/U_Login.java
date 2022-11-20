@@ -72,8 +72,13 @@ public class U_Login extends HttpServlet {
 				session.setAttribute("loginUser", loginUser);
 
 				// メイン画面サーブレットにフォワード
+				System.out.println("Login→Mainフォワード自体ちゃんとされている");
+				// U_Mainに処理を送るが、こちらの処理がPOSTのため、送り先でも処理がPOSTになることに注意
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/U_Main");
 				dispatcher.forward(request, response);
+
+				// のちのフォワード処理がelseで書かれていない場合は明示的にreturnする
+				return;
 			}
 
 		}

@@ -1,4 +1,5 @@
 <%@page import="model.Area"%>
+
 <%@page import="model.Prefecture"%>
 <%@page import="model.Region"%>
 <%@page import="java.util.List"%>
@@ -33,7 +34,7 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 				<br>
 				<h2>新規会員登録</h2>
 				<br>
-				<form action="/shopper/U_RegisterUser" method="post">
+				<form action="/shopper/U_RegisterUser" method="post" id="main_form">
 					<div class="form-outline mb-1" id="email_outline">
 						<label for="email"  class="form-label">メールアドレス</label>
 						<input type="email"  class="form-control" id="email" name="email" required="required" placeholder="abc12345@example.co.jp"/>
@@ -217,6 +218,7 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 	<jsp:include page="/common_js.jsp" />
 	<script type="text/javascript" src="js/additional.js"></script>
 	<script type="text/javascript" src="js/validation.js"></script>
+	<script type="text/javascript" src="js/add_validation.js"></script>
 </body>
 
 </html>

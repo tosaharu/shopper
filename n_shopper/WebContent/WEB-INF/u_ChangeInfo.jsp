@@ -30,7 +30,7 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 			class="d-flex flex-column justify-content-center align-items-center mx-auto" style="width:100%;max-width:720px;" >
 			<br>
 			<h2>会員情報変更</h2>
-			<form action="/shopper/U_ChangeInfo" method="post" class="container my-4">
+			<form action="/shopper/U_ChangeInfo" method="post" class="container my-4" id="main_form">
 				<h3 class="my-2">基本情報変更</h3>
 				<div class="form-outline mb-1" id="email_outline">
 					<label for="email"  class="form-label">メールアドレス</label>
@@ -162,7 +162,7 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 				</div>
 				<br>
 				<div class="row justify-content-center">
-					<button type="submit" class="btn btn-primary col-3">変更する</button>
+					<button type="submit" id="subm"  class="btn btn-primary col-3" disabled>変更する</button>
 				</div>
 			</form>
 
@@ -191,5 +191,6 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 	</div>
 	<jsp:include page="/common_js.jsp" />
 	<script type="text/javascript" src="js/additional.js"></script>
+	<script type="text/javascript" src="js/validation.js"></script>
 </body>
 </html>

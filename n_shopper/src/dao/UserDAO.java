@@ -25,9 +25,9 @@ public class UserDAO {
 	/**
 	 * メールアドレスがDBに存在するかチェック（主に新規会員登録時のバリデーションで使用）
 	 * @param mail ユーザーが入力したメールアドレス
-	 * @return メールアドレスが存在する場合はtrue、しない場合にfalseを返す
+	 * @return メールアドレスが存在する場合はuser_idを返し、ない場合に0を返す
 	 */
-	public boolean checkMail(String mail) {
+	public int checkMail(String mail) {
 
 		//ドライバのロード
 		try {
@@ -46,18 +46,19 @@ public class UserDAO {
 			ps.setString(1, mail);
 
 			// SELECT実行
-			ResultSet rs = ps.executeQuery();
+			ResultSet result = ps.executeQuery();
 
 			// 合致した結果があるか確認
-			if (rs.next()) {
-				return true;
+			if (result.next()) {
+				int id = result.getInt("id");
+				return id;
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			return 0;
 		}
-		return false;
+		return 0;
 	}
 
 	/**
