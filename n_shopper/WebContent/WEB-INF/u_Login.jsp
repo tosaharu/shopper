@@ -17,10 +17,9 @@ String errorMessage = (String) request.getAttribute("errorMessage");
 </head>
 <body>
 <jsp:include page="/header.jsp" />
-	<div class="container">
+	<div class="container" style="max-width: 540px;">
 		<div class="d-flex flex-column justify-content-center align-items-center">
-			<div class="">
-				<br> <br>
+				<br>
 				<h2>ログイン</h2>
 				<br>
 				<!-- エラーメッセージが存在するときだけ表示する -->
@@ -41,7 +40,7 @@ String errorMessage = (String) request.getAttribute("errorMessage");
 							type="password" id="password1" class="form-control" name="pass" />
 					</div>
 					<br>
-					<a href="/shopper/U_ChangePassword">パスワードをお忘れの方はこちら</a>
+					<a href="/shopper//U_ResetPasswordAuth">パスワードをお忘れの方はこちら</a>
 					<br>
 					<button type="submit" class="btn btn-primary col-10 ">ログイン</button>
 					<br>
@@ -50,7 +49,6 @@ String errorMessage = (String) request.getAttribute("errorMessage");
 				</form>
 			</div>
 		</div>
-	</div>
 
 
 

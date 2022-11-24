@@ -37,7 +37,6 @@ public class Ajax_ChangeUserPassword extends HttpServlet {
 
 		//フォームのリクエストパラメータを取得
 		String originalPass = request.getParameter("password");
-		String newPass = request.getParameter("newpassword");
 
 		//	ログインセッション確認
 		HttpSession session = request.getSession();
@@ -49,6 +48,10 @@ public class Ajax_ChangeUserPassword extends HttpServlet {
 		System.out.println(passwordMatch);
 
 		if(passwordMatch) {
+			// 新しいパスをハッシュ化
+			String newPass = request.getParameter("newpassword");
+			newPass = encoder.encode(newPass);
+
 			// セッションのパスワードを更新
 			loginUser.setPass(newPass);
 

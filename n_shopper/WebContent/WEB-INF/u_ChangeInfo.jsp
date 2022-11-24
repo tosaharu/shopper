@@ -168,48 +168,48 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 					<button type="button" id="subm1"  class="btn btn-primary col-3" disabled onclick="changeInfo()">変更する</button>
 				</div>
 
-					<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
-					  <div
-					    id="changeInfoToast"
-					    class="toast fade hide"
-					    role="alert"
-					    aria-live="assertive"
-					    aria-atomic="true"
-					  >
-					    <div class="toast-header">
-					      <img src="" width="20" height="20" class="rounded me-2" alt="result" />
-					      <strong class="me-auto">
-					      </strong>
-					      <small>たったいま</small>
-					      <button
-					        type="button"
-					        class="btn-close"
-					        data-bs-dismiss="toast"
-					        aria-label="Close"
-					      ></button>
-					    </div>
-					  </div>
-					  <div
-					    id="changePassToast"
-					    class="toast fade hide"
-					    role="alert"
-					    aria-live="assertive"
-					    aria-atomic="true"
-					  >
-					    <div class="toast-header">
-					      <img src="" width="20" height="20" class="rounded me-2" alt="result" />
-					      <strong class="me-auto">
-					      </strong>
-					      <small>たったいま</small>
-					      <button
-					        type="button"
-					        class="btn-close"
-					        data-bs-dismiss="toast"
-					        aria-label="Close"
-					      ></button>
-					    </div>
-					  </div>
-					</div>
+				<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
+				  <div
+				    id="changeInfoToast"
+				    class="toast fade hide"
+				    role="alert"
+				    aria-live="assertive"
+				    aria-atomic="true"
+				  >
+				    <div class="toast-header">
+				      <img src="" width="20" height="20" class="rounded me-2" alt="result" />
+				      <strong class="me-auto">
+				      </strong>
+				      <small>たったいま</small>
+				      <button
+				        type="button"
+				        class="btn-close"
+				        data-bs-dismiss="toast"
+				        aria-label="Close"
+				      ></button>
+				    </div>
+				  </div>
+				  <div
+				    id="changePassToast"
+				    class="toast fade hide"
+				    role="alert"
+				    aria-live="assertive"
+				    aria-atomic="true"
+				  >
+				    <div class="toast-header">
+				      <img src="" width="20" height="20" class="rounded me-2" alt="result" />
+				      <strong class="me-auto">
+				      </strong>
+				      <small>たったいま</small>
+				      <button
+				        type="button"
+				        class="btn-close"
+				        data-bs-dismiss="toast"
+				        aria-label="Close"
+				      ></button>
+				    </div>
+				  </div>
+				</div>
 			</form>
 
 

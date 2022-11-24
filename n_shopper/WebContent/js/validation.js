@@ -151,11 +151,3 @@ function activateExistingMailValidation(outline_id, input_id, form_id, button_id
 
 	}, false)
 }
-
-// 各選択肢にバリデーションをかける
-activateExistingMailValidation('email_outline', 'email', 'main_form', 'subm1');
-activateValidation('name_outline', 'name', 'main_form', 'subm1');
-activateRadioValidation('gender_outline', 'gender', 'invalid-feedback-gender', 'main_form', 'subm1');
-activateValidation('region_outline', 'region', 'main_form', 'subm1');
-activateValidation('prefecture_outline', 'prefecture', 'main_form', 'subm1');
-activateValidation('area_outline', 'area', 'main_form', 'subm1');

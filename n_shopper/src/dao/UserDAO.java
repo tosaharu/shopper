@@ -369,7 +369,7 @@ public class UserDAO {
 			Connection conn = DriverManager.getConnection(URL, NAME, PASS);
 
 			// SQL文の作成
-			String sql = "SELECT * FROM user WHERE mail=? and birthday=?";
+			String sql = "SELECT * FROM user WHERE mail=? AND birthday=?";
 			PreparedStatement ps = conn.prepareStatement(sql);
 
 			ps.setString(1, user.getMail());
@@ -389,7 +389,7 @@ public class UserDAO {
 				user.setPass(result.getString("pass"));
 				user.setName(result.getString("name"));
 				user.setGender(result.getInt("gender"));
-				user.setBirthday(result.getTimestamp("a.birthday").toLocalDateTime());
+				user.setBirthday(result.getTimestamp("birthday").toLocalDateTime());
 				user.setArea_id(result.getInt("area_id"));
 				user.setActive(result.getInt("active_flag"));
 				return user;

@@ -79,6 +79,9 @@ function changePass() {
 			let text = "パスワードを変更できませんでした";
 			$('#changeInfoToast > div > img').attr('src', src);
 			$('#changeInfoToast > div > strong').text(text);
+			$('#password').empty();
+			$('#newpassword1').empty();
+			$('#newpassword2').empty();
 		}
 	}).fail(function (result) {
 		//通信失敗時のコールバック
