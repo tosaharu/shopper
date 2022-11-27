@@ -18,7 +18,7 @@ import model.GetList;
 import model.U_User;
 
 /**
- * 新規会員登録画面関連のサーブレット
+ * 新規会員登録処理に関するサーブレット
  * @author Haruka Sato
  */
 @WebServlet("/U_RegisterUser")
@@ -26,7 +26,7 @@ public class U_RegisterUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 新規会員登録画面表示処理
+	 * 画面表示処理
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {

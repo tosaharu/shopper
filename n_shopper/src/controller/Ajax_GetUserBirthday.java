@@ -16,7 +16,7 @@ import model.JsonBean_U_Birthday;
 import model.U_User;
 
 /**
- * ajax通信のgetに対し、セッションから誕生日情報を返すサーブレット
+ * ajax通信のgetに対し、セッションに存在する誕生日情報を返すサーブレット
  * @author Haruka Sato
  */
 @WebServlet("/Ajax_GetUserBirthday")
@@ -24,7 +24,7 @@ public class Ajax_GetUserBirthday extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * メールアドレスの存在確認処理
+	 * セッションからLocalDateTime型の誕生日情報を取得し、フォームに合ったInt型に変換して返す
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 

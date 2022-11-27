@@ -13,7 +13,7 @@ import dao.UserDAO;
 import model.U_User;
 
 /**
- * ajax通信のpostに対し、メールと誕生日が正しければ送信ボタン付の確認POPを表示し、正しくなければメッセージを返すサーブレット
+ * ajax通信のpostに対し、メールと誕生日の合致するユーザーが存在するかどうかで別のレスポンスを返すサーブレット
  * @author Haruka Sato
  */
 @WebServlet("/Ajax_CheckUserMailAndBirthday")
@@ -21,13 +21,7 @@ public class Ajax_CheckUserMailAndBirthday extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 *
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * 送られてきたメールと誕生日に合致するユーザーデータがあれば送信ボタン付の確認POP表示用のレスポンスを返し、正しくなければメッセージ表示用のレスポンスを返す
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// 文字化け対策

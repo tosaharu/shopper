@@ -18,7 +18,7 @@ import model.U_Product;
 import model.U_User;
 
 /**
- * メイン画面関連のサーブレット
+ * メイン画面処理に関するサーブレット
  * @author Haruka Sato
  */
 @WebServlet("/U_Main")
@@ -26,7 +26,7 @@ public class U_Main extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * メイン画面表示処理
+	 * 画面表示処理
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {

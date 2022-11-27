@@ -14,10 +14,18 @@ import model.CreateOneTimePass;
 import model.GetList;
 import model.SendMail;
 
+/**
+ * パスワード紛失時の再設定認証処理に関するサーブレット
+ * @author Haruka Sato
+ */
 @WebServlet("/U_ResetPasswordAuth")
 public class U_ResetPasswordAuth extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 画面表示処理
+	 *
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
@@ -30,7 +38,7 @@ public class U_ResetPasswordAuth extends HttpServlet {
 	}
 
 	/**
-	 * 送られてきたメールアドレス宛にパスワードを送信しつつ、パスワード入力フォームへ遷移する
+	 * 再設定認証画面から送られてきたメールアドレス宛にパスワードを送信しつつ、パスワード入力フォームへ遷移する
 	 *
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -48,7 +56,10 @@ public class U_ResetPasswordAuth extends HttpServlet {
 		String pass = CreateOneTimePass.create();
 
 		HttpSession session = request.getSession();
-		session.setAttribute("OneTimePass", pass);
+		session.setAttribute("oneTimePass", pass);
+
+		// 再登録のためメールもセッションに保管
+		session.setAttribute("resetPassMail", mail);
 
 		// メールアドレス宛にwebmasterからメールを送る処理
 		SendMail.sendOneTimePass(mail, pass);

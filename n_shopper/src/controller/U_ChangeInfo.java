@@ -15,12 +15,16 @@ import model.GetList;
 import model.U_User;
 
 /**
- * Servlet implementation class U_Changelnfo
+ * ユーザー情報変更処理に関するサーブレット
+ * @author Haruka Sato
  */
 @WebServlet("/U_ChangeInfo")
 public class U_ChangeInfo extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 画面表示処理
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
@@ -31,7 +35,9 @@ public class U_ChangeInfo extends HttpServlet {
 		dispatcher.forward(request, response);
 	}
 
-	// ajaxで呼び出す仕様に変更
+	/**
+	 * 情報変更画面のajaxからのリクエストを受け、DBのユーザー情報を変更する
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		//文字化け対策

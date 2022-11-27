@@ -13,17 +13,16 @@ import javax.servlet.http.HttpSession;
 import model.GetList;
 
 /**
- * Servlet implementation class U_Logout
+ * ログアウト処理に関するサーブレット
+ * @author Haruka Sato
  */
-
 @WebServlet("/U_Logout")
 public class U_Logout extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @see HttpServlet#HttpServlet()
+	 * ログアウト処理をして完了画面へ遷移する
 	 */
-
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

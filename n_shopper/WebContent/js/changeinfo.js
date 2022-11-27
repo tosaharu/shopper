@@ -23,7 +23,7 @@ function changeInfo() {
 		data: {
 			email: $('input[name="email"]').val(),
 			name: $('input[name="name"]').val(),
-			gender: $('input[name="gender"]').val(),
+			gender: $('input[name="gender"]:checked').val(),
 			area: $('select[name="area"]').val(),
 		}
 	}).done(function (result) {

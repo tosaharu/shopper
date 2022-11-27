@@ -18,21 +18,18 @@ import model.U_Product_String;
 import model.U_User;
 
 /**
- * Servlet implementation class U_RegisterItem
+ * 商品登録処理に関するサーブレット
+ * @author Haruka Sato
  */
 @WebServlet("/U_RegisterItem")
 public class U_RegisterItem extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * サーブレットにactionされる道。
-	 * 1.登録するを押された場合。（u_RegiserItem.jspから）
+	 * 画面表示処理
 	 */
-
-
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
 
 		//セッションスコープにインスタンスを保存-初期化されてるものが入ってるので間違った取り出しが行われないようにしている。
 		//お気に入りリストのセッションはここに入れてほしい。
@@ -40,30 +37,33 @@ public class U_RegisterItem extends HttpServlet {
 		U_Product_String u_p_s = new U_Product_String();
 		request.setAttribute("u_p_s", u_p_s);
 
-//		ログイン済みかどうかを判定
+		//		ログイン済みかどうかを判定
 		HttpSession session = request.getSession();
 		U_User user = (U_User) session.getAttribute("loginUser");
 
 		//		ログイン済の場合
 		if (user != null) {
 			System.out.println("ユーザーIDは" + user.getUser_id());
-		} else {
-			//	未ログインの場合
-			System.out.println("セッションがありません");
-			U_User guest = new U_User(0, "ゲスト");
-
-			//確認用
-			System.out.println("ユーザーIDは" + guest.getUser_id()+"◆"+guest.getName()+"さん");
-
-			//未ログイン状況をリクエストパラメーターへ送信
-			request.setAttribute("guest", guest);
-
-			//テストの為
-			RequestDispatcher dispatcher = request.getRequestDispatcher("/U_Login");
-			dispatcher.forward(request, response);
-			return;//事故防止のreturn;
-
 		}
+
+		//		未ログイン時の処理はいったんスルー　
+		//		else {
+		//			//	未ログインの場合
+		//			System.out.println("セッションがありません");
+		//			U_User guest = new U_User(0, "ゲスト");
+		//
+		//			//確認用
+		//			System.out.println("ユーザーIDは" + guest.getUser_id()+"◆"+guest.getName()+"さん");
+		//
+		//			//未ログイン状況をリクエストパラメーターへ送信
+		//			request.setAttribute("guest", guest);
+		//
+		//			//テストの為
+		//			RequestDispatcher dispatcher = request.getRequestDispatcher("/U_Login");
+		//			dispatcher.forward(request, response);
+		//			return;//事故防止のreturn;
+		//
+		//		}
 
 		//エリアデータを取得してリクエストスコープに入れる
 		GetList.AreaPrefectureRegion(request);
@@ -71,8 +71,8 @@ public class U_RegisterItem extends HttpServlet {
 		//大中小品目、店舗名のArrayListを取り出す。
 		GetList.MainSubItemStore(request);
 
-System.out.println();
-System.out.println("エリアと品目と店舗をDBから取得し保存");
+		System.out.println();
+		System.out.println("エリアと品目と店舗をDBから取得し保存");
 
 		//セッションスコープに保存するインスタンスの生成。
 		U_Product check_id = new U_Product();
@@ -86,7 +86,7 @@ System.out.println("エリアと品目と店舗をDBから取得し保存");
 			System.out.println(store_list.get(i).getStoreName());
 		}*/
 
-		System.out.println("check_idの取得"+check_id.getStore_id());
+		System.out.println("check_idの取得" + check_id.getStore_id());
 		System.out.println(u_p_s.getItemDetail_s());
 		System.out.println("********jspへforwardする");
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/u_RegisterItem.jsp");
@@ -94,10 +94,13 @@ System.out.println("エリアと品目と店舗をDBから取得し保存");
 		return;
 	}
 
+	/**
+	 * 商品投稿処理
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-//		文字化け対策
+		//		文字化け対策
 		request.setCharacterEncoding("UTF-8");
 
 		//エラーメッセージの中身：2回以上使うので一括で編集するためにここで宣言する。
@@ -105,11 +108,11 @@ System.out.println("エリアと品目と店舗をDBから取得し保存");
 		String errorMsg_price = "1円以上の値段を入力して下さい。";
 		String errorMsg_amount = "1つ以上の数量を入力して下さい。";
 
-//		ログイン済みかどうかを判定
+		//		ログイン済みかどうかを判定
 		HttpSession session = request.getSession();
 		//		ログインセッションの取得
 		U_User user = (U_User) session.getAttribute("loginUser");
-//		ログイン済の場合
+		//		ログイン済の場合
 		if (user != null) {
 			System.out.println("ユーザーIDは" + user.getUser_id());
 
@@ -134,7 +137,6 @@ System.out.println("エリアと品目と店舗をDBから取得し保存");
 
 		//大中小品目、店舗名を取得してリクエストスコープに入れる
 		GetList.MainSubItemStore(request);
-
 
 		//		TODO [[[佐藤メモ]]]
 		//		投稿する際、ログイン済かどうかを判別
@@ -181,8 +183,10 @@ System.out.println("エリアと品目と店舗をDBから取得し保存");
 
 		System.out.println("動作確認2");
 
-		System.out.println("◆itemDetail:"+itemDetail + "\n◆comment:" + comment + "\n◆item_id_tx:" + item_id_tx + "\n◆price_tx:" + price_tx + "\n◆amount_tx:" + amount_tx + "\n◆discount_tx:"
-				+ discount_tx + "\n◆store_id_tx:" + store_id_tx + "\n◆user_id_tx:" + user_id_tx + "\n◆date_tx:" + date_tx +  "\n◆mainItem_id_tx:" + mainItem_id_tx + "\n◆subItem_id_tx:"
+		System.out.println("◆itemDetail:" + itemDetail + "\n◆comment:" + comment + "\n◆item_id_tx:" + item_id_tx
+				+ "\n◆price_tx:" + price_tx + "\n◆amount_tx:" + amount_tx + "\n◆discount_tx:"
+				+ discount_tx + "\n◆store_id_tx:" + store_id_tx + "\n◆user_id_tx:" + user_id_tx + "\n◆date_tx:"
+				+ date_tx + "\n◆mainItem_id_tx:" + mainItem_id_tx + "\n◆subItem_id_tx:"
 				+ subItem_id_tx + "リクエストパラメータから出す");
 
 		U_Product_String u_p_s = new U_Product_String();
@@ -225,7 +229,7 @@ System.out.println("エリアと品目と店舗をDBから取得し保存");
 			System.out.println("◆MainItem_id:" + check_id.getMainItem_id() + "\n◆SubItem_id:" +
 					check_id.getSubItem_id() + "\n◆Item_id:" +
 					check_id.getItem_id() + "\n◆Store_id:" +
-					check_id.getStore_id()+"\n◆Discount:"+check_id.getDiscount());
+					check_id.getStore_id() + "\n◆Discount:" + check_id.getDiscount());
 
 			request.setAttribute("check_id", check_id);
 
@@ -270,7 +274,6 @@ System.out.println("エリアと品目と店舗をDBから取得し保存");
 				dispatcher.forward(request, response);
 				return;
 			}
-
 
 			//		ログイン済の場合
 			if (user != null) {
@@ -318,14 +321,13 @@ System.out.println("エリアと品目と店舗をDBから取得し保存");
 
 				}
 
-
 			}
-//			else{//今は死んでるけど生き返る。
-//				//			未ログインの場合
-//				System.out.println("未ログイン時用のセッションに投稿情報をいれる");
-//				//			TODO
-//				//			未ログイン時の投稿リストセッションを取得してフォワード
-//			}
+			//			else{//今は死んでるけど生き返る。
+			//				//			未ログインの場合
+			//				System.out.println("未ログイン時用のセッションに投稿情報をいれる");
+			//				//			TODO
+			//				//			未ログイン時の投稿リストセッションを取得してフォワード
+			//			}
 
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
@@ -349,6 +351,3 @@ System.out.println("エリアと品目と店舗をDBから取得し保存");
 
 	}
 }
-//}
-
-

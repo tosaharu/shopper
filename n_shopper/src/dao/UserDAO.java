@@ -163,7 +163,7 @@ public class UserDAO {
 			// 入会状態である「1」でフラグを設定
 			ps.setInt(7, 1);
 
-			// INSERT実行
+			// UPDATE実行
 			int result = ps.executeUpdate();
 
 			// 処理の結果を確認
@@ -354,7 +354,11 @@ public class UserDAO {
 		}
 	}
 
-	//パスワード再発行のためのユーザ照合
+	/**
+	 * パスワード再発行のためのユーザ照合
+	 * @param user
+	 * @return
+	 */
 	public U_User CollationUser(U_User user) {
 		//ドライバのロード
 		try {
@@ -402,44 +406,48 @@ public class UserDAO {
 		}
 	}
 
-	//パスワード再発行のupdate文
-	public U_User UpdatePass(String pass, int user_id) {
-
-		Connection conn = null;
-
-		//データベースに接続してみる。
+	/**
+	 * //パスワード再発行のupdate文
+	 * @param pass
+	 * @param mail
+	 * @return
+	 */
+	public boolean UpdatePass(String pass, String mail) {
+		//ドライバのロード
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");//ドライバのロード
-			conn = DriverManager.getConnection(URL, NAME, PASS);
-
-			//SQLクエリ文を生成する。
-			PreparedStatement ps = conn.prepareStatement(
-					//SELECT文を準備
-					"UPDATE user SET pass = ? " + "WHERE id = ? " + ";");
-
-			ps.setString(1, pass);
-			ps.setInt(2, user_id);
-
-			int result = ps.executeUpdate();
-
-			System.out.println("パスワードを更新しました。");
-
+			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
+		}
+
+		// データベース接続～SQL実行
+		try {
+			// データベース接続
+			Connection conn = DriverManager.getConnection(URL, NAME, PASS);
+
+			// SQL文の作成
+			PreparedStatement ps = conn.prepareStatement(
+					//SELECT文を準備
+					"UPDATE user SET pass = ? WHERE mail = ? ");
+
+			ps.setString(1, pass);
+			ps.setString(2, mail);
+
+			// UPDATE実行
+			int result = ps.executeUpdate();
+
+			// 処理の結果を確認
+			if (result != 1) {
+				// 正常に完了しなかった場合(正常に処理が完了するのは result = 1 の場合のみ)
+				System.out.println("パスワード再発行のUPDATEで想定外の動きが発生しました");
+				return false;
+			}
+			return true;
+
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();//通信切断
-
-				} catch (Exception e2) {
-					e2.printStackTrace();
-				}
-				conn = null;
-			}
+			return false;
 		}
-		return null;
 	}
 
 	//フォローユーザー一覧取得

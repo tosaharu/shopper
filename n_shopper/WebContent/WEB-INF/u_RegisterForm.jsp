@@ -178,12 +178,12 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 					<button type="button" class="btn btn-secondary col-3 mx-2"
 						onclick="history.back(-1);return false;">戻る</button>
 					<button type="button" id="subm1" class="btn btn-primary col-3 mx-2"
-						data-bs-toggle="modal" data-bs-target="#exampleModal"
+						data-bs-toggle="modal" data-bs-target="#modal"
 						onclick="sendFormData()" disabled>登録</button>
 				</div>
 				<!-- Modal -->
-				<div class="modal fade" id="exampleModal" tabindex="-1"
-					aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal fade" id="modal" tabindex="-1"
+					aria-labelledby="modalLabel" aria-hidden="true">
 					<div class="modal-dialog">
 						<div class="modal-content">
 							<div class="modal-header">

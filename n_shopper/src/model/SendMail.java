@@ -87,8 +87,8 @@ public class SendMail {
 //	}
 
 	public static void sendOneTimePass(String toAddress,String pass) {
-		 final String address = "shopper.webmaster@gmail.com";
-		 final String password = "swkauunyyldzuxki";
+		 final String address = "shopper.webmaster2271@gmail.com";
+		 final String password = "zykixeowftxahebr";
 
 	   try {
 	    // プロパティの設定

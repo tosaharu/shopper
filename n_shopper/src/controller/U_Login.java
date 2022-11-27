@@ -17,7 +17,7 @@ import model.GetList;
 import model.U_User;
 
 /**
- * ログイン画面関連のサーブレット
+ * ログイン処理に関するサーブレット
  * @author Haruka Sato
  */
 @WebServlet("/U_Login")
@@ -25,7 +25,7 @@ public class U_Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * ログイン画面表示処理
+	 * 画面表示処理
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -45,13 +45,19 @@ public class U_Login extends HttpServlet {
 			HttpServletResponse response)
 			throws ServletException, IOException {
 
-		//エリアデータを取得してリクエストスコープに保存
-		GetList.AreaPrefectureRegion(request);
-
 		// リクエストパラメータの取得
 		request.setCharacterEncoding("UTF-8");
 		String mail = request.getParameter("mail");
 		String originalPass = request.getParameter("pass");
+
+		// パスワード変更画面からくる場合はpostで送られてしまうので、ここでgetに送る
+		if(mail == null && originalPass == null) {
+			doGet(request, response);
+			return;
+		}
+
+		//エリアデータを取得してリクエストスコープに保存
+		GetList.AreaPrefectureRegion(request);
 
 		// 入力されたメールアドレスをもとにユーザーデータを取得
 		UserDAO dao = new UserDAO();

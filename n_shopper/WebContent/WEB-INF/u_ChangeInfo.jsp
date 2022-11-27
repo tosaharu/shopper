@@ -242,12 +242,12 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 			</form>
 
 
-			<form action="/shopper/U_Quit" method="post" class="container my-2">
+			<form action="/shopper/U_Quit" method="get" class="container my-2">
 				<h3 class="my-2">退会</h3>
 				<br>
 				<input type="hidden" name="active" value="1">
 				<div class="row justify-content-center">
-					<button type="submit" class="btn btn-primary col-3">退会する</button>
+					<button type="submit" class="btn btn-secondary col-3">退会手続きへ</button>
 				</div>
 			</form>
 		</div>

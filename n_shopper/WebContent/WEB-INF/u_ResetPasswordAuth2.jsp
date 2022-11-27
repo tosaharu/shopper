@@ -28,7 +28,7 @@ String errorMessage = (String) request.getAttribute("errorMessage");
 			<!-- エラーメッセージが存在するときだけ表示する -->
 			<div id="errormessage"></div>
 			<div class="container">
-				<form action="U_ResetPasswordAuth" method="post" id="main_form">
+				<form id="main_form">
 					<div class="form-outline mb-1" id="one-time-pass_outline">
 						<label for="one-time-pass" class="form-label">パスワード</label> <input
 							type="text" class="form-control" id="one-time-pass" name="one-time-pass" pattern="\d{6}"

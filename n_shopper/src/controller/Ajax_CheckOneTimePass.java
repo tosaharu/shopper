@@ -18,13 +18,7 @@ public class Ajax_CheckOneTimePass extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 *
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * ワンタイムパスをチェックする処理
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// 文字化け対策
@@ -35,11 +29,13 @@ public class Ajax_CheckOneTimePass extends HttpServlet {
 
 		// パスワードを保存したセッションを取得
 		HttpSession session = request.getSession();
-		String correctPass = (String) session.getAttribute("OneTimePass");
+		String correctPass = (String) session.getAttribute("oneTimePass");
+		System.out.println(inputPass);
+		System.out.println(correctPass);
 
 		//
 		if(correctPass != null) {
-			if(inputPass == correctPass) {
+			if(inputPass.equals(correctPass)) {
 				// パスワードが正しい場合のレスポンス
 				response.getWriter().append("2");
 			}else {

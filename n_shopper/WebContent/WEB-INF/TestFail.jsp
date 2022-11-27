@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-<p>変更に成功しました</p>
+<p>セッション切れの際の遷移</p>
 </body>
 </html>

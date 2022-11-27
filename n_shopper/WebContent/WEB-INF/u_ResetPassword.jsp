@@ -30,38 +30,47 @@ String errorMessage = (String) request.getAttribute("errorMessage");
 			<div class="container">
 				<form action="U_ResetPassword" method="post" id="main_form">
 					<div class="form-outline mb-1" id="newpass_outline">
-						<label class="form-label" for="newpassword1">新しいパスワード</label>
-						<input	type="password" id="newpassword1" class="form-control" required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" placeholder="半角の英小文字・英大文字・数字を含む8文字以上"/>
-				    	<div id="validationServerUsernameFeedback" class="invalid-feedback">パスワードを入力してください</div>
+						<label class="form-label" for="newpassword1">新しいパスワード</label> <input
+							type="password" id="newpassword1" class="form-control"
+							required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+							placeholder="半角の英小文字・英大文字・数字を含む8文字以上" />
+						<div id="validationServerUsernameFeedback"
+							class="invalid-feedback">パスワードを入力してください</div>
 					</div>
 					<div class="form-outline mb-1" id="newpass2_outline">
 						<label class="form-label" for="newpassword2">新しいパスワード（再入力）</label>
-						<input 	type="password" id="newpassword2" class="form-control"  name="newpassword" required="required" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" placeholder="半角の英小文字・英大文字・数字を含む8文字以上"/>
-				    	<div id="validationServerUsernameFeedback" class="invalid-feedback">パスワードが一致しません</div>
+						<input type="password" id="newpassword2" class="form-control"
+							name="newpassword" required="required"
+							pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+							placeholder="半角の英小文字・英大文字・数字を含む8文字以上" />
+						<div id="validationServerUsernameFeedback"
+							class="invalid-feedback">パスワードが一致しません</div>
 					</div>
 					<br>
-				<div class="row justify-content-center">
-					<button type="button" id="subm1" class="btn btn-primary col-3 mx-2" disabled>送信</button>
-				</div>
+					<div class="row justify-content-center">
+						<button type="button" id="subm1"
+							class="btn btn-primary col-3 mx-2" data-bs-toggle="modal"
+							data-bs-target="#modal" onclick="sendFormData()" disabled>登録</button>
+					</div>
 					<!-- Modal -->
 					<div class="modal fade" id="modal" tabindex="-1"
 						aria-labelledby="exampleModalLabel" aria-hidden="true">
 						<div class="modal-dialog">
 							<div class="modal-content">
 								<div class="modal-header">
-									<h5 class="modal-title" id="exampleModalLabel">送信先確認</h5>
+									<h5 class="modal-title" id="exampleModalLabel">パスワード確認</h5>
 									<button type="button" class="btn-close" data-bs-dismiss="modal"
 										aria-label="Close"></button>
 								</div>
 								<div class="modal-body">
 									<table class="table">
 										<p>
-											下記のメールアドレスに認証用パスワードを送ります。<br>よろしいでしょうか？
+											下記のパスワードを新しく設定します。<br>よろしいでしょうか？
 										</p>
 										<tbody>
 											<tr>
-												<th scope="row" style="border-style: none;">メールアドレス</th>
-												<td id="modal_email" style="border-style: none;"></td>
+												<th scope="row" style="border-style: none;">パスワード</th>
+												<td id="modal_newpassword" style="border-style: none;"></td>
 											</tr>
 										</tbody>
 									</table>
@@ -94,5 +103,6 @@ String errorMessage = (String) request.getAttribute("errorMessage");
 	<script type="text/javascript" src="js/additional.js"></script>
 	<script type="text/javascript" src="js/validation.js"></script>
 	<script type="text/javascript" src="js/validation_forResetPass.js"></script>
+	<script type="text/javascript" src="js/resetPass.js"></script>
 </body>
 </html>

@@ -13,7 +13,8 @@ import javax.servlet.http.HttpSession;
 import model.U_User;
 
 /**
- * Servlet implementation class U_HeaderAreaSetter
+ * 選択中のエリアをヘッダーに表示させる処理に関するサーブレット
+ * @author Haruka Sato
  */
 @WebServlet("/U_HeaderAreaSetter")
 public class U_HeaderAreaSetter extends HttpServlet {
@@ -21,7 +22,7 @@ public class U_HeaderAreaSetter extends HttpServlet {
 
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * セッションからエリア情報を取得し、その情報でヘッダーのセレクトボタンを選択済みにする
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -48,12 +49,4 @@ public class U_HeaderAreaSetter extends HttpServlet {
 
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/U_Main");
 		dispatcher.forward(request, response);	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-	}
-
 }

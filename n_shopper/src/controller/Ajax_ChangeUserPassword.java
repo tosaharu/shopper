@@ -23,13 +23,7 @@ public class Ajax_ChangeUserPassword extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * メールアドレスの存在確認処理
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * パスワード変更処理
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//文字化け対策
