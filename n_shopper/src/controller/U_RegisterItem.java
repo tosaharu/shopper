@@ -46,24 +46,24 @@ public class U_RegisterItem extends HttpServlet {
 			System.out.println("ユーザーIDは" + user.getUser_id());
 		}
 
-		//		未ログイン時の処理はいったんスルー　
-		//		else {
-		//			//	未ログインの場合
-		//			System.out.println("セッションがありません");
-		//			U_User guest = new U_User(0, "ゲスト");
-		//
-		//			//確認用
-		//			System.out.println("ユーザーIDは" + guest.getUser_id()+"◆"+guest.getName()+"さん");
-		//
-		//			//未ログイン状況をリクエストパラメーターへ送信
-		//			request.setAttribute("guest", guest);
-		//
-		//			//テストの為
-		//			RequestDispatcher dispatcher = request.getRequestDispatcher("/U_Login");
-		//			dispatcher.forward(request, response);
-		//			return;//事故防止のreturn;
-		//
-		//		}
+//				未ログイン時の処理はいったんスルー　
+				else {
+					//	未ログインの場合
+					System.out.println("セッションがありません");
+//					U_User guest = new U_User(0, "ゲスト");
+//
+//					//確認用
+//					System.out.println("ユーザーIDは" + guest.getUser_id()+"◆"+guest.getName()+"さん");
+//
+//					//未ログイン状況をリクエストパラメーターへ送信
+//					request.setAttribute("guest", guest);
+//
+					//テストの為
+					RequestDispatcher dispatcher = request.getRequestDispatcher("/U_Login");
+					dispatcher.forward(request, response);
+					return;//事故防止のreturn;
+
+				}
 
 		//エリアデータを取得してリクエストスコープに入れる
 		GetList.AreaPrefectureRegion(request);
@@ -345,7 +345,7 @@ public class U_RegisterItem extends HttpServlet {
 
 		}
 
-		RequestDispatcher dispatcher = request.getRequestDispatcher("u_Main.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/shopper/U_Main");
 		dispatcher.forward(request, response);
 		return;
 

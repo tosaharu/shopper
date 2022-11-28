@@ -3,35 +3,80 @@ package model;
 import java.io.Serializable;
 import java.util.Date;
 
-//Beans
 /**
- * @author Jasmine
+ * @author Haruka Sato
+ *
  */
 public class U_Product implements Serializable {
 
-	//取り出したい変数を作成する。
 	private int product_id;//商品登録ID 商品登録（product）
+
 	private int user_id;//ユーザーID 商品登録（product）
 	private String user_name;//ユーザーの名前 ユーザー（user）
-	private int item_id;//小品目ID  商品登録（product）	 品目テーブル商品登録 商品区分ID）
-	private String item_name;//小品目名 小品目（item）
-	private String itemDetail;//品目詳細 商品登録（product）
-	private int store_id;//店舗ID 商品登録（product）	店舗情報テーブル（商品登録 店舗ID）
-	private String store_name;//店舗名 店舗情報（store）	店舗情報テーブル（商品登録 店舗ID）
-	private int amount;//数量の入力 商品登録（product）
-	private int price;//価格  商品登録（product）
-	private Date date;//日付 商品登録（product）
-	private int discount=100;//特別割引の有無 商品登録（product）
-	private String comment;//コメント 商品登録（product）
+
+	private int region_id;//地方ID
+	private int prefecture_id;//都道府県ID
+	private int area_id;//エリアID
+
+
 	private int mainItem_id;//大品目ID 大品目(mainItem)
 	private String mainItem_name;//大品目名 大品目(mainItem)
 	private int subItem_id;//中品目ID 中品目(subItem)
 	private String subItem_name;//中品目名 中品目(subItem)
 
+	private int item_id;//小品目ID  商品登録（product）	 品目テーブル商品登録 商品区分ID）
+	private String item_name;//小品目名 小品目（item）
+
+	private String itemDetail;//品目詳細 商品登録（product）
+
+	private int store_id;//店舗ID 商品登録（product）	店舗情報テーブル（商品登録 店舗ID）
+	private String store_name;//店舗名 店舗情報（store）	店舗情報テーブル（商品登録 店舗ID）
+
+	private int amount;//数量の入力 商品登録（product）
+	private int price;//価格  商品登録（product）
+
+	private Date date;//日付 商品登録（product）
+	private int discount=100;//特別割引の有無 商品登録（product）
+	private String comment;//コメント 商品登録（product）
+
 	/**
 	 * /JavaBeansである為のコンストラクタ
 	 */
 	public U_Product() {}
+
+	/**
+	 * @param item_id
+	 * @param store_id
+	 * @param mainItem_id
+	 * @param subItem_id
+	 */
+	public U_Product(int mainItem_id, int subItem_id,int item_id, int store_id) {
+		this.item_id = item_id;
+		this.store_id = store_id;
+		this.mainItem_id = mainItem_id;
+		this.subItem_id = subItem_id;
+	}
+
+	// ↓使用しづらいのでsetter利用に移行したい
+	/**
+	 * @param product_id
+	 * @param user_id
+	 * @param user_name
+	 * @param item_id
+	 * @param item_name
+	 * @param itemDetail
+	 * @param store_id
+	 * @param store_name
+	 * @param amount
+	 * @param price
+	 * @param date
+	 * @param discount
+	 * @param comment
+	 * @param mainItem_id
+	 * @param mainItem_name
+	 * @param subItem_id
+	 * @param subItem_name
+	 */
 	public U_Product(int product_id, int user_id, String user_name, int item_id, String item_name, String itemDetail,
 			int store_id, String store_name, int amount, int price, Date date, int discount, String comment,
 			int mainItem_id, String mainItem_name, int subItem_id, String subItem_name) {
@@ -214,18 +259,6 @@ public class U_Product implements Serializable {
 	 */
 	public int getMainItem_id() {
 		return mainItem_id;
-	}
-	/**
-	 * @param item_id
-	 * @param store_id
-	 * @param mainItem_id
-	 * @param subItem_id
-	 */
-	public U_Product(int mainItem_id, int subItem_id,int item_id, int store_id) {
-		this.item_id = item_id;
-		this.store_id = store_id;
-		this.mainItem_id = mainItem_id;
-		this.subItem_id = subItem_id;
 	}
 	/**
 	 * @param mainItem_id セットする mainItem_id

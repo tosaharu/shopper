@@ -10,6 +10,10 @@ public class Store implements Serializable {
 	String storeName;//店舗名
 	String subPostcode;//詳細住所address
 	String businessHours; //営業時間
+
+	String startHour;
+	String endHour;
+
 	String hp;//HP　URL
 	int tel;//電話番号
 	String tel_s;
@@ -31,7 +35,8 @@ public class Store implements Serializable {
 	public Store(int store_id,
 			String storeName ,
 			String subPostcode ,
-			String businessHours ,
+			String startHour ,
+			String endHour ,
 			String hp ,
 			int tel ,
 			String payment ,
@@ -42,8 +47,9 @@ public class Store implements Serializable {
 			int count ) {
 		this.store_id = store_id;
 		this.storeName = storeName;
-		this.subPostcode = subPostcode;
-		this.businessHours = businessHours;
+		this.startHour = startHour;
+		this.endHour = endHour;
+		this.endHour = endHour;
 		this.hp = hp;
 		this.tel = tel;
 		this.payment = payment;
@@ -151,6 +157,22 @@ public class Store implements Serializable {
 	 */
 	public void setBusinessHours(String businessHours) {
 		this.businessHours = businessHours;
+	}
+
+	public String getStartHour() {
+		return startHour;
+	}
+
+	public void setStartHour(String startHour) {
+		this.startHour = startHour;
+	}
+
+	public String getEndHour() {
+		return endHour;
+	}
+
+	public void setEndHour(String endHour) {
+		this.endHour = endHour;
 	}
 
 	/**

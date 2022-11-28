@@ -12,55 +12,55 @@ import model.Store;
 
 public class StoreDAO {
 
-	private final String JDBC_URL = "jdbc:mysql://localhost:3306/shopper";
-	private final String DB_USER = "root";
-	private final String DB_PASS = "root";
+	private final String URL = "jdbc:mysql://localhost:3306/shopper";
+	private final String NAME = "root";
+	private final String PASS = "root";
 
 	public List<Store> findAll() {
+
+		List<Store> storeList = new ArrayList<>();
+
+		//ドライバのロード
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-			return null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
 		}
 
-		List<Store> storeList = new ArrayList<>();
-		//データベースに接続する
+		// データベース接続～SQL実行
+		try {
+			// データベース接続
+			Connection conn = DriverManager.getConnection(URL, NAME, PASS);
 
-		try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS)) {
+			String sql = "SELECT * FROM shopper.store";
+			PreparedStatement ps = conn.prepareStatement(sql);
 
-			//SQL文の準備
-			String sql = "SELECT * FROM shopper.store;";
-			PreparedStatement pStmt = conn.prepareStatement(sql);
-
-			//SELEC文を実行する。
-			ResultSet rs = pStmt.executeQuery();
+			//SELECT文を実行する。
+			ResultSet result = ps.executeQuery();
 
 			//SELECT文の結果をArrayListに格納する。
-			while (rs.next()) {
+			while (result.next()) {
 
-				int store_id_a = rs.getInt("id");
-				int area_id_a = rs.getInt("area_id");
-				String storeName_a = rs.getString("name");
-				String subPostcode_a = rs.getString("address");
-				String businessHours_a = rs.getString("business_hours");
-				String hp_a = rs.getString("hp");
-				int tel_a = rs.getInt("tel");
-				String payment_a = rs.getString("payment");
-				String information_a = rs.getString("information");
-				String service_a = rs.getString("service");
-				int administratedFlag_a = rs.getInt("administrated_flag");
-				int openFlag_a = rs.getInt("open_flag");
-				int count_a = rs.getInt("count");
+				int store_id = result.getInt("id");
+				int area_id = result.getInt("area_id");
+				String storeName = result.getString("name");
+				String subPostcode = result.getString("address");
+				String startHour = result.getString("start_hour");
+				String endHour = result.getString("end_hour");
+				String hp = result.getString("hp");
+				int tel = result.getInt("tel");
+				String payment = result.getString("payment");
+				String information = result.getString("information");
+				String service = result.getString("service");
+				int administratedFlag = result.getInt("administrated_flag");
+				int openFlag = result.getInt("open_flag");
+				int count = result.getInt("count");
 
-				Store storeList_in = new Store(store_id_a, storeName_a, subPostcode_a, businessHours_a,
-						hp_a, tel_a, payment_a, information_a, service_a, administratedFlag_a,
-						openFlag_a, count_a);
-				storeList_in.setArea_id(area_id_a);
-				storeList.add(storeList_in);
+				Store store = new Store(store_id, storeName, subPostcode,startHour, endHour,
+						hp, tel, payment, information, service, administratedFlag,
+						openFlag, count);
+				store.setArea_id(area_id);
+				storeList.add(store);
 			}
 
 		} catch (SQLException e) {
@@ -73,45 +73,44 @@ public class StoreDAO {
 
 
 	public Store findTheStore(Store store) {
+
+		//ドライバのロード
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-			return null;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
 		}
 
+		// データベース接続～SQL実行
+		try {
+			// データベース接続
+			Connection conn = DriverManager.getConnection(URL, NAME, PASS);
 
-		//データベースに接続する
-
-		try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS)) {
-
-			//SQL文の準備
+			// SQL文の作成
 			String sql = "SELECT * FROM shopper.store where id=?;";
-			PreparedStatement pStmt = conn.prepareStatement(sql);
+			PreparedStatement ps = conn.prepareStatement(sql);
 
 			//SELECT文の？に使用する値を設定しSQL文を完成させる。
-			pStmt.setInt(1,store.getStore_id());
+			ps.setInt(1,store.getStore_id());
 
-			//SELEC文を実行する。
-			ResultSet rs = pStmt.executeQuery();
+			//SELECT文を実行する。
+			ResultSet result = ps.executeQuery();
 
-			if (rs.next()) {
-				store.setStore_id(rs.getInt("id"));
-				store.setStoreName(rs.getString("name"));
-				store.setArea_id(rs.getInt("area_id"));
-				store.setSubPostcode(rs.getString("address"));
-				store.setBusinessHours(rs.getString("business_hours"));
-				store.setHP(rs.getString("hp"));
-				store.setTel(rs.getInt("tel"));
-				store.setPayment(rs.getString("payment"));
-				store.setInformation(rs.getString("information"));
-				store.setService(rs.getString("service"));
-				store.setCorporationFlag(rs.getInt("administrated_flag"));
-				store.setOpenFlag(rs.getInt("open_flag"));
-				store.setCount(rs.getInt("count"));
+			if (result.next()) {
+				store.setStore_id(result.getInt("id"));
+				store.setStoreName(result.getString("name"));
+				store.setArea_id(result.getInt("area_id"));
+				store.setSubPostcode(result.getString("address"));
+				store.setStartHour(result.getString("start_hour"));
+				store.setEndHour(result.getString("end_hour"));
+				store.setHP(result.getString("hp"));
+				store.setTel(result.getInt("tel"));
+				store.setPayment(result.getString("payment"));
+				store.setInformation(result.getString("information"));
+				store.setService(result.getString("service"));
+				store.setCorporationFlag(result.getInt("administrated_flag"));
+				store.setOpenFlag(result.getInt("open_flag"));
+				store.setCount(result.getInt("count"));
 
 			}
 			return store;
@@ -124,69 +123,59 @@ public class StoreDAO {
 	}
 
 
-	public boolean create(Store store) {
+	public int create(Store store) {
+
+		//ドライバのロード
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-			return false;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
 		}
 
+		// データベース接続～SQL実行
+		try {
+			// データベース接続
+			Connection conn = DriverManager.getConnection(URL, NAME, PASS);
 
-		//データベースに接続する
-
-		try (Connection conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASS)) {
-
-			//SQL文の準備
-			String sql = "INSERT INTO store (name,area_id,address,business_hours,hp,tel,payment,information,service,administrated_flag,open_flag) VALUES(?,?,?,?,?,?,?,?,?,?,?);";
-			PreparedStatement pStmt = conn.prepareStatement(sql);
+			// SQL文の作成
+			String sql1 = "INSERT INTO store (name,area_id,address,start_hour,end_hour,hp,tel,payment,information,service,administrated_flag,open_flag) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);";
+			PreparedStatement ps = conn.prepareStatement(sql1);
 
 			//SELECT文の？に使用する値を設定しSQL文を完成させる。
-			pStmt.setString(1,store.getStoreName());
-			pStmt.setInt(2, store.getArea_id());
-			pStmt.setString(3,store.getSubPostcode());
-			pStmt.setString(4,store.getBusinessHours());
-			pStmt.setString(5,store.getHp());
-			pStmt.setInt(6, store.getTel());
-			pStmt.setString(7,store.getPayment());
-			pStmt.setString(8,store.getInformation());
-			pStmt.setString(9,store.getService());
-			pStmt.setInt(10, store.getCorporationFlag());
-			pStmt.setInt(11, store.getOpenFlag());
+			ps.setString(1,store.getStoreName());
+			ps.setInt(2, store.getArea_id());
+			ps.setString(3,store.getSubPostcode());
+			ps.setString(4,store.getStartHour());
+			ps.setString(5,store.getEndHour());;
+			ps.setString(6,store.getHp());
+			ps.setInt(7, store.getTel());
+			ps.setString(8,store.getPayment());
+			ps.setString(9,store.getInformation());
+			ps.setString(10,store.getService());
+			ps.setInt(11, store.getCorporationFlag());
+			ps.setInt(12, store.getOpenFlag());
 
 			//SQL文を実行する。
-			int result = pStmt.executeUpdate();
-			if (result != 1) {
-				return false;
-			}
+			int updated = ps.executeUpdate();
+			if (updated != 1) {
+				return 0;
 
-//			★★★消す★★★「
-			//ResultSet rs = pStmt.executeQuery();
-//			if (rs.next()) {
-//				store.setStore_id(rs.getInt("id"));
-//				store.setStoreName(rs.getString("name"));
-//				store.setArea_id(rs.getInt("area_id"));
-//				store.setSubPostcode(rs.getString("address"));
-//				store.setBusinessHours(rs.getString("business_hours"));
-//				store.setHP(rs.getString("hp"));
-//				store.setTel(rs.getInt("tel"));
-//				store.setPayment(rs.getString("payment"));
-//				store.setInformation(rs.getString("information"));
-//				store.setService(rs.getString("service"));
-//				store.setCorporationFlag(rs.getInt("administrated_flag"));
-//				store.setOpenFlag(rs.getInt("open_flag"));
-//				store.setCount(rs.getInt("count"));
-//
-//			}
-//			★★★消す★★★」
-			return true;
+			}
+			String sql2 = "SELECT LAST_INSERT_ID()";
+			ps = conn.prepareStatement(sql2);
+
+			//SELECT文を実行する。
+			ResultSet result = ps.executeQuery();
+
+			if (result.next()) {
+				return result.getInt("LAST_INSERT_ID()");
+
+			}
+			return 0;
 
 		}  catch (Exception e) {
 			e.printStackTrace();
-			return false;
+			return 0;
 		}
 
 	}

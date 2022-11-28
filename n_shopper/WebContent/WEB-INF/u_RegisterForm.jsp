@@ -178,8 +178,7 @@ List<Area> area_List = (List<Area>) request.getAttribute("areaList");
 					<button type="button" class="btn btn-secondary col-3 mx-2"
 						onclick="history.back(-1);return false;">戻る</button>
 					<button type="button" id="subm1" class="btn btn-primary col-3 mx-2"
-						data-bs-toggle="modal" data-bs-target="#modal"
-						onclick="sendFormData()" disabled>登録</button>
+						data-bs-toggle="modal" data-bs-target="#modal" disabled>登録</button>
 				</div>
 				<!-- Modal -->
 				<div class="modal fade" id="modal" tabindex="-1"

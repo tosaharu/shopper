@@ -199,21 +199,6 @@ function hideTargetList(list) {
   }
 }
 
-function validate() {
-  let forms = document.querySelectorAll('.needs-validation');
-  forms.forEach(form => {
-    form.addEventListener('submit', (event) => {
-      if (!form.checkValidity()) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-      form.classList.add('was-validated');
-    }, false);
-  });
-}
-// https://moewe-net.com/html-and-css/bootstrap/use-validation
-
-
 function sendFormData() {
   selectAndInsertData("email", "modal_email");
   selectAndInsertData("password2", "modal_password");
