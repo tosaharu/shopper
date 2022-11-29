@@ -345,7 +345,7 @@ public class U_RegisterItem extends HttpServlet {
 
 		}
 
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/shopper/U_Main");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("/U_Main");
 		dispatcher.forward(request, response);
 		return;
 

@@ -62,7 +62,8 @@ public class Ajax_RegisterStoreInfo extends HttpServlet {
 
 		if(storeId > 0) {
 			// 処理が成功し、storeIdが返ってきている
-				response.getWriter().append("storeId");
+				String id = String.valueOf(storeId);
+				response.getWriter().append(id);
 		}else {
 			// 処理が失敗し、storeIdが返ってきていない
 			response.getWriter().append("0");

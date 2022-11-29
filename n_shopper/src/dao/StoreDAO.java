@@ -124,6 +124,7 @@ public class StoreDAO {
 
 
 	public int create(Store store) {
+		System.out.println("店舗作成処理開始");
 
 		//ドライバのロード
 		try {
@@ -168,7 +169,9 @@ public class StoreDAO {
 			ResultSet result = ps.executeQuery();
 
 			if (result.next()) {
-				return result.getInt("LAST_INSERT_ID()");
+				int storeId = result.getInt("LAST_INSERT_ID()");
+				System.out.println(storeId);
+				return storeId;
 
 			}
 			return 0;

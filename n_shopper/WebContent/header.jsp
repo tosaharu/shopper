@@ -30,7 +30,7 @@ if (user != null) {
 				</li>
 				<li class="nav-item"><a class="nav-link" aria-current="page"
 					href="/shopper/U_Main">ホーム</a></li>
-				<li class="nav-item dropdown"><a
+				<!-- <li class="nav-item dropdown"><a
 					class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
 					role="button" data-toggle="dropdown" aria-haspopup="true"
 					aria-expanded="false"> 他のユーザー </a>
@@ -38,7 +38,8 @@ if (user != null) {
 						<a class="dropdown-item" href="#">フォロー</a> <a
 							class="dropdown-item" href="#">フォロワー</a> <a class="dropdown-item"
 							href="#">人気のユーザー</a>
-					</div></li>
+					</div></li>  --!>
+
 				<li class="nav-item"><a class="nav-link" aria-current="page"
 					href="/shopper/U_ChangeInfo">会員情報変更</a></li>
 				<li class="nav-item"><a class="nav-link"
